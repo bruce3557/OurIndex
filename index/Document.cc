@@ -1,6 +1,8 @@
 /*
   Author: Bruce Kuo
   Date: 2013.02.13
+
+  Implementation of defined class
 */
 
 #include "Document.h"
@@ -31,19 +33,6 @@ int Version::getEndTime() {
 
 int Version:getFreq() {
   return freq;
-}
-
-
-int Version::GetLowPoint() const = 0 {
-  return start_time;
-}
-
-int Version::GetHighPoint() const = 0 {
-  return end_time;
-}
-
-void Print() const {
-
 }
 
 
@@ -88,8 +77,22 @@ int searchVer(const int query_time) {
 void insertVersion(const Version &ver) {
   int pos = searchVer(ver);
   ver_list.insert(ver_list.begin() + pos, ver);
+  start_time = ver.start_time < start_time ? ver.start_time : start_time;
+  end_time = ver.start_time > end_time ? ver.start_time : end_time;
 }
 
 void Document::sortList() {
   std::sort(ver_list.begin(), ver_list.end(), ver_cmp);
+}
+
+int Document::GetLowPoint() const = 0 {
+  return start_time;
+}
+
+int Document::GetHighPoint() const = 0 {
+  return end_time;
+}
+
+void Document::Print() const {
+
 }

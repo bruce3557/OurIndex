@@ -11,7 +11,8 @@
 #include <vector>
 using std::vector;
 
-class Version : Interval {
+class Version
+{
 // Definition of version
 // TODO(Bruce Kuo): Discuss that whether end_time need to exists
 
@@ -25,12 +26,6 @@ public:
   int getEndTime();
   int getFreq();
   
-  // implementation from interval class
-  int GetLowPoint() const = 0;
-  int GetHighPoint() const = 0;
-  void Print() const;
-
-
 private:
   int revid;
   int start_time;
@@ -38,7 +33,13 @@ private:
   int freq;
 };
 
-class Document {
+
+class Document : Interval 
+{
+
+// Basic document class
+// This must inherit interval class because document will be
+// treated as a node in interval tree
 
 public:
   Document();
@@ -48,6 +49,12 @@ public:
   int searchVer(const Version &ver);
   int searchVer(const int query_time);
   void sortList();
+
+  // Inherit from basic interval class
+  // These function need to be implemented for interval tree use
+  int GetLowPoint() const = 0;
+  int GetHighPoint() const = 0;
+  vovid Print() const;
 
 private:
   int docid;
