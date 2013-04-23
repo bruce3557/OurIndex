@@ -6,9 +6,13 @@
 #ifndef __DOCUMENT_H__
 #define __DOCUMENT_H__
 
-#include "../lib/interval_tree.h"
+#include "../lib/IntervalTree/interval_tree.h"
+
+//#include <sdsl/int_vector.hpp>
+//#include <sdsl/util.hpp>
 
 #include <vector>
+#include <algorithm>
 using std::vector;
 
 class Version
@@ -21,10 +25,10 @@ public:
   Version(int _vid, int _start_time, int _end_time, int _freq);
   ~Version();
 
-  int getID();
-  int getStartTime();
-  int getEndTime();
-  int getFreq();
+  int getID() const;
+  int getStartTime() const;
+  int getEndTime() const;
+  int getFreq() const;
   
 private:
   int revid;
@@ -34,7 +38,7 @@ private:
 };
 
 
-class Document : Interval 
+class Document : public Interval 
 {
 
 // Basic document class
@@ -52,9 +56,9 @@ public:
 
   // Inherit from basic interval class
   // These function need to be implemented for interval tree use
-  int GetLowPoint() const = 0;
-  int GetHighPoint() const = 0;
-  vovid Print() const;
+  virtual int GetLowPoint() const ;
+  virtual int GetHighPoint() const ;
+  virtual void Print() const;
 
 private:
   int docid;
@@ -63,5 +67,62 @@ private:
   vector< Version > ver_list;
 
 };
+
+
+// Move implementation here
+Version::Version(){}
+Version::~Version(){}
+
+Version::Version(int _revid, int _start_time,
+                 int _end_time, int _freq) {
+  revid = _revid;
+  start_time = _start_time;
+  end_time = _end_time;
+  freq = _freq;
+}
+
+int Version::getID() const {
+  return revid;
+}
+
+int Version::getStartTime() const {
+  return start_time;
+}
+
+int Version::getEndTime() const {
+  return end_time;
+}
+
+int Version::getFreq() const {
+  return freq;
+}
+
+Document::Document() {}
+Document::~Document() {}
+
+Document::Document(int _docid) {
+  docid = _docid;
+  ver_list.clear();
+}
+
+bool ver_cmp(const Version &a, const Version &b) {
+  return (a.getStartTime() < b.getStartTime());
+}
+
+void Document::sortList() {
+  std::sort(ver_list.begin(), ver_list.end(), ver_cmp);
+}
+
+int Document::GetLowPoint() const {
+  return start_time;
+}
+
+int Document::GetHighPoint() const {
+  return end_time;
+}
+
+void Document::Print() const {
+  
+}
 
 #endif
