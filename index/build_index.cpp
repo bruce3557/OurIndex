@@ -137,6 +137,8 @@ void CST_Traversal(tCST &cst) {
     PQ.push(*it);
    
   /*
+   * Iterate traverse each level's LCA until root.
+   *
    * If PQ.size is equal to 1, that must be root node
    * So we don't need to handle this case
    */
@@ -207,6 +209,7 @@ int main(int argc, char *argv[]) {
   strcpy(opt_file, argv[1]);
   strcpy(opt_file, ".idx");
   store_to_file(cst, opt_file);
+
 
   return 0;
 }

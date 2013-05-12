@@ -70,6 +70,11 @@ public:
   void queryInterval(int low, int high);
   void setFreqList(vector< FreqNode > &f){ freq = f; };
   void increaseFreq(int idx);
+  
+  void sortDocs();
+  // get rid of hard code part to save space
+  void buildDocs();
+
   int getFreq(int idx) const;
   int getNodeId() const;
   int getDepth() const;
@@ -86,9 +91,14 @@ private:
   int depth;
   //int_vector<20> freq_list(65536) ;
   vector< FreqNode > freq;
-  IntervalTree doc_list;
+  vector< Document > doc_list;
+  //IntervalTree doc_list;
 };
 
+
+bool doc_cmp(const Document &a, const Document &b) {
+  return a.GetLowPoint() < b.GetLowPoint();
+}
 
 
 // move the implementation here
@@ -149,16 +159,65 @@ void SuffixTreeNode::increaseFreq(int idx) {
   freq[idx].increaseFreq();
 }
 
+void SuffixTreeNode:sortDocs() {
+  std::sort(doc_list.begin(), doc_list.end(), doc_cmp);
+}
+
+void SuffixTreeNode::buildDocs() {
+  //
+  // TODO (Bruce Kuo):
+  //   extract the content in freq list and compress to array
+  //   eliminate the docs that does not appear in the phrase
+  //
+
+  doc_list.clear();
+  vector<int> doc_appear(freq_list.size() + 1);
+  std::fill(doc_appear.begin(), doc_appear.end(), -1);
+  for(int i=0;i<freq_list.size();++i) {
+    if( freq_list[i].getFreq() == 0 ) continue;
+    int x;
+    if( doc_appear[ freq_list[i].getDocid() ] == -1 ) {
+      doc_appear[i] = x = doc_list.size();
+      doc_list.push_back(Document(freq_list[i].getDocid()));
+    } else {
+      x = doc_appear[freq_list[i].getDocid()];
+    }
+    doc_list[x].insertVersion(Version(freq_list[i].getRevid(), freq_list[i].getStartTime(), freq_list[i].getFreq()));
+  }
+  sortDocs();
+  freq_list.clear();
+  co_appear().clear();
+  for(int i=0;i<doc_list.size();++i)
+    doc_list[i].sortList();
+}
+
 vector<unsigned char> SuffixTreeNode::serialize() {
   vector<unsigned char> output;
+  // save node id
   vector<unsigned char> trans = intToBytes(node_id);
   output.insert(output.end(), trans.begin(), trans.end());
+  // save depth
   trans = intToBytes(depth);
   output.insert(output.end(), trans.begin(), trans.end());
-  for(unsigned int i=0;i<freq.size();++i) {
-    trans = freq[i].serialize();
+  // save doc_list size
+  int size = doc_list.size();
+  trans = intToBytes(size);
+  output.insert(output.end(), trans.begin(), trans.end());
+  // save doc_list
+  for(int i=0;i<size;++i) {
+    trans = doc_list[i].serialize();
     output.insert(output.end(), trans.begin(), trans.end());
   }
+
+  /*
+  Fixed by Bruce Kuo: 2013.05.13
+  replaced by doc_list serialize
+
+    for(unsigned int i=0;i<freq.size();++i) {
+      trans = freq[i].serialize();
+      output.insert(output.end(), trans.begin(), trans.end());
+    }
+  */
   return output;
 }
 
