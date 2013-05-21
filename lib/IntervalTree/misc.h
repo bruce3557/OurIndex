@@ -32,11 +32,17 @@
 
 #define ExitProgramMacro(a) { \
 printf("Error: "); printf(a); \
-printf("Exiting from line %i in file %s\n",__LINE__,__FILE__); \
+printf("Exiting from line %d in file %s\n",__LINE__,__FILE__); \
 printf("\nCausing Segmentation Fault to exit ungracefully\n"); \
-       int * junk = NULL; (*junk)++;\
-       printf("%i\n",(int)junk);}
-
+       int* junk = NULL; (*junk)++; \
+       printf("%x\n", junk);}
+/*
+void ExitProgramMacro(char *a) {
+  printf("Error: ");
+  printf(a);
+  printf("Exiting from line %d
+}
+*/
 #endif /* ends #ifndef ExitProgramMacro */
 
 
@@ -44,9 +50,7 @@ printf("\nCausing Segmentation Fault to exit ungracefully\n"); \
 if (!(condition)) { \
 fprintf(stderr, "Assumption \"%s\"\nFailed in file %s: at line:%i\n", \
 #condition,__FILE__,__LINE__); \
-fprintf(stderr, "condition"); \
-exit(1);}
-//ExitProgramMacro(#condition);}
+ExitProgramMacro(#condition);}
 
 #ifdef CHECK_ASSUMPTIONS
 #define ASSUME(x) VERIFY(x)
@@ -75,7 +79,7 @@ exit(1);}
 inline void Assert(int assertion, char* error) {
   if(!assertion) {
     printf("Assertion Failed: %s\n",error);
-    //ExitProgramMacro("Exiting From Function Assert(...)\n");
+    ExitProgramMacro("Exiting From Function Assert(...)\n");
   }
 }
 
@@ -104,10 +108,10 @@ inline void * SafeMalloc(size_t size) {
     sprintf(errorMessagePartOne,
 	    "Exiting From SafeMalloc because malloc of size %i failed.\n",
 	    size);
-    //sprintf(errorMessagePartTwo,
-	  //  "Calling sbrk(0) gives %x\n",(int)(sbrk(0)));
-    //strcat(errorMessagePartOne,errorMessagePartTwo);
-    //ExitProgramMacro(errorMessagePartOne);
+    sprintf(errorMessagePartTwo,
+	    "Calling sbrk(0) gives %x\n", sbrk(0));
+    strcat(errorMessagePartOne,errorMessagePartTwo);
+    ExitProgramMacro(errorMessagePartOne);
     return(0);
   }
 }
@@ -135,9 +139,9 @@ inline void * SafeCalloc(int numberOfElements , size_t size) {
   } else {
     printf("memory overflow: calloc failed in SafeCalloc(%i,%i).",
 	   numberOfElements, size);
-    //printf("sbrk(0) gives %x\n",(int)sbrk(0));
+    printf("sbrk(0) gives %x\n", sbrk(0));
     printf("  Exiting Program.\n");
-    //ExitProgramMacro("Exiting From Function SafeCalloc(...)\n");
+    ExitProgramMacro("Exiting From Function SafeCalloc(...)\n");
     return(0);
   }
 }

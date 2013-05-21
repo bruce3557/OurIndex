@@ -3,15 +3,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "misc.h"
-#include <ostream>
 #include <iostream>
 
 #ifndef DEFAULT_INITIAL_SIZE
 #define DEFAULT_INITIAL_SIZE 16
 #endif
 
-using namespace std;
 
+using namespace std;
 
 //  TemplateStack is an array based stack which grows to
 //  the necessary size.  The standard stack operations
@@ -34,9 +33,8 @@ using namespace std;
 
 template <class Type>
 class TemplateStack {
+  friend ostream & operator<< (ostream &, TemplateStack<Type> &);
  public:
-  friend ostream &operator << (ostream &, TemplateStack< Type > &);
-
   TemplateStack(int size = DEFAULT_INITIAL_SIZE)
     : currentSize(0) ,
       maxSize(size) ,
@@ -350,7 +348,7 @@ private:
       { 
       printf("realloc failed for TemplateStack from %s\n",__FILE__);
       printf("exiting\n"); 
-      //ExitProgramMacro("Error in TemplateStack::SpecialRealloc");
+      ExitProgramMacro("Error in TemplateStack::SpecialRealloc");
     } 
     return(arrayData);
   }

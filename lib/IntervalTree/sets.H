@@ -9,9 +9,9 @@
 
 #include<stdio.h>
 #include<stdlib.h>
-#include<iostream.h>
-#include<strstream.h>
-#include<tcl.h>
+#include<iostream>
+#include<strstream>
+#include"tcl.h"
 #include<ctype.h>
 
 // **********************************************************************

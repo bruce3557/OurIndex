@@ -6,7 +6,7 @@
 #include"TemplateStack.H"
 #include<math.h>
 #include<limits.h>
-#include<iostream.h>
+#include<iostream>
 
 //  CONVENTIONS:  
 //                Function names: Each word in a function name begins with 

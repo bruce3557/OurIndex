@@ -6,13 +6,15 @@ CC	=	g++
 CFLAGS	=	-g -pedantic
 LINK	=	g++
 LFLAGS	=	${CFLAGS} -ldl -ltcl -lefence
-#OBJECTS = interval_tree.o test.o RedBlackTree.o
-OBJECTS = interval_tree.o
+OBJECTS = interval_tree.o test.o RedBlackTree.o
 
-.PHONY: test clean 
+.PHONY: lib 
 
-test: test.exe
-	./test.exe tree_test.tcl
+#test: test.exe
+#	./test.exe tree_test.tcl
+
+lib:
+	$(CC) $(CFLAGS) -c interval_tree.cc
 
 clean:
 	rm -f test.exe *.o *~ MANIFEST

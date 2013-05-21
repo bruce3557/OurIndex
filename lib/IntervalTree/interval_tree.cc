@@ -1,6 +1,9 @@
 #include "interval_tree.h"
 #include <stdio.h>
 #include <math.h>
+#include <iostream>
+
+using namespace std;
 
 // If the symbol CHECK_INTERVAL_TREE_ASSUMPTIONS is defined then the
 // code does a lot of extra checking to make sure certain assumptions
@@ -24,12 +27,16 @@ IntervalTreeNode::IntervalTreeNode(Interval * newInterval)
     high(newInterval->GetHighPoint()) , 
     maxHigh(high) {
 }
+
 IntervalTreeNode::~IntervalTreeNode(){
 }
+
 Interval::Interval(){
 }
+
 Interval::~Interval(){
 }
+
 void Interval::Print() const {
   cout << "No Print Method defined for instance of Interval" << endl;
 }
@@ -431,7 +438,7 @@ void IntervalTree::TreePrintHelper( IntervalTreeNode* x) const {
 
 IntervalTree::~IntervalTree() {
   IntervalTreeNode * x = root->left;
-  TemplateStack< IntervalTreeNode * > stuffToFree;
+  TemplateStack<IntervalTreeNode *> stuffToFree;
 
   if (x != nil) {
     if (x->left != nil) {
@@ -720,15 +727,12 @@ TemplateStack<void *> * IntervalTree::Enumerate(int low,
     }
     if(x->left->maxHigh >= low) { // implies x != nil 
       if ( recursionNodeStackTop == recursionNodeStackSize ) {
-	      recursionNodeStackSize *= 2;
-	      recursionNodeStack = (it_recursion_node *) 
-	      realloc(recursionNodeStack,
-		    recursionNodeStackSize * sizeof(it_recursion_node));
-	      if (recursionNodeStack == NULL) {
-          fprintf(stderr, "realloc failed in IntervalTree:Enumerate\n");
-          exit(1);
-        }
-    //ExitProgramMacro("realloc failed in IntervalTree::Enumerate\n");
+	recursionNodeStackSize *= 2;
+	recursionNodeStack = (it_recursion_node *) 
+	  realloc(recursionNodeStack,
+		  recursionNodeStackSize * sizeof(it_recursion_node));
+	if (recursionNodeStack == NULL) 
+	  ExitProgramMacro("realloc failed in IntervalTree::Enumerate\n");
       }
       recursionNodeStack[recursionNodeStackTop].start_node = x;
       recursionNodeStack[recursionNodeStackTop].tryRightBranch = 0;
@@ -759,13 +763,16 @@ TemplateStack<void *> * IntervalTree::Enumerate(int low,
 
 int IntervalTree::CheckMaxHighFieldsHelper(IntervalTreeNode * y, 
 				    const int currentHigh,
-				    int match) const {
+				    int match) const
+{
   if (y != nil) {
-    match = CheckMaxHighFieldsHelper(y->left,currentHigh,match) ? 1 : match;
+    match = CheckMaxHighFieldsHelper(y->left,currentHigh,match) ?
+      1 : match;
     VERIFY(y->high <= currentHigh);
     if (y->high == currentHigh)
       match = 1;
-    match = CheckMaxHighFieldsHelper(y->right,currentHigh,match) ? 1 : match;
+    match = CheckMaxHighFieldsHelper(y->right,currentHigh,match) ?
+      1 : match;
   }
   return match;
 }
@@ -778,9 +785,7 @@ void IntervalTree::CheckMaxHighFields(IntervalTreeNode * x) const {
   if (x != nil) {
     CheckMaxHighFields(x->left);
     if(!(CheckMaxHighFieldsHelper(x,x->maxHigh,0) > 0)) {
-      fprintf(stderr," error found in CheckMaxHighFields.\n");
-      exit(1);
-      //ExitProgramMacro("error found in CheckMaxHighFields.\n");
+      ExitProgramMacro("error found in CheckMaxHighFields.\n");
     }
     CheckMaxHighFields(x->right);
   }
