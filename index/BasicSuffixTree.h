@@ -164,12 +164,7 @@ void SuffixTreeNode:sortDocs() {
 }
 
 void SuffixTreeNode::buildDocs() {
-  //
-  // TODO (Bruce Kuo):
-  //   extract the content in freq list and compress to array
-  //   eliminate the docs that does not appear in the phrase
-  //
-
+  // build up compact doc_list
   doc_list.clear();
   vector<int> doc_appear(freq_list.size() + 1);
   std::fill(doc_appear.begin(), doc_appear.end(), -1);

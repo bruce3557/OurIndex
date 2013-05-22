@@ -49,6 +49,10 @@ int locate_doc(int_vector<> &REVID, int pos) {
   return ed;
 }
 
+bool vec_cmp(const SuffixTreeNode &a, const SuffixTreeNode &b) {
+  return a.getNodeId() < b.getNodeId();
+}
+
 void CST_Traversal(tCST &cst) {
   int_vector<> docsign;
   unsigned char dollar_str[] = "$";
@@ -183,6 +187,22 @@ void CST_Traversal(tCST &cst) {
     MTN.clear();
   }
   
+  vector<int> metadata;
+  vector< SuffixTreeNode > vec;
+  for(set< SuffixTreeNode >::iterator it=STN.begin();it != STN.end(); ++it)
+    vec.push_back(*it);
+  std::sort(vec.begin(), vec.end(), vec_cmp);
+  STN.clear();
+
+  int position = 0;
+  metadata.push_back(0);
+  for(int i=0;i<vec.size();++i) {
+    vector<unsigned char> x = vec[i].serialize();
+    int x_size = x.size();
+    position += x_size();
+    metadata.push_back(position);
+    // TODO: complete this part
+  }
 }
 
 void PrintUsage(char *str) {
