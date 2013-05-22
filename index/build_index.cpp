@@ -49,6 +49,11 @@ int locate_doc(int_vector<> &REVID, int pos) {
   return ed;
 }
 
+// compare function for sorting node list to output
+bool vec_cmp(const SuffixTreeNode &a, const SuffixTreeNode &b) {
+  return a.getNodeId() < b.getNodeId();
+}
+
 void CST_Traversal(tCST &cst) {
   int_vector<> docsign;
   unsigned char dollar_str[] = "$";
@@ -109,7 +114,6 @@ void CST_Traversal(tCST &cst) {
         int lca_id = cst.id(lca);
         int lca_depth = cst.depth(lca);
         //
-        // TODO (Bruce Kuo):
         // Finish the HSV framework
         //
         // Temporary we use set to implement this framework to check whether
@@ -183,6 +187,27 @@ void CST_Traversal(tCST &cst) {
     MTN.clear();
   }
   
+  vector< SuffixTreeNode > vec;
+  for(set< SuffixTreeNode >::iterator it=STN.begin();it != STN.end(); ++it)
+    vec.push_back(*it);
+  std::sort(vec.begin(), vec.end(), vec_cmp);
+  STN.clear();
+
+  // Save to index file
+  int position = 0;
+  FILE metadata = fopen("metadata.idx", "w");
+  FILE node_idx = fopen("node_info.idx", "w");
+  fprintf(metadata, "0");
+  for(int i=0;i<vec.size();++i) {
+    vector<unsigned char> x = vec[i].serialize();
+    position += x.size();
+    fprintf(metadata, " %d", position);
+    fwrite(position, 4, 1, metadata);
+    fwrite((const unsigned char *)&x[0], 1, x[i].size(), node_idx);
+  }
+  fclose(metadata);
+  fclose(node_idx);
+  store_to_file(cst, string("cst.idx"));
 }
 
 void PrintUsage(char *str) {
@@ -198,17 +223,16 @@ int main(int argc, char *argv[]) {
   input = fopen(argv[1], "r");
   
   tCST cst;
-  //construct(argv[1], cst);
   construct(cst, argv[1], 1);
   
   CST_Traversal(cst);
 
 
   // Save index
-  char opt_file[50];
-  strcpy(opt_file, argv[1]);
-  strcpy(opt_file, ".idx");
-  store_to_file(cst, opt_file);
+  //char opt_file[50];
+  //strcpy(opt_file, argv[1]);
+  //strcpy(opt_file, ".idx");
+  //store_to_file(cst, opt_file);
 
 
   return 0;
