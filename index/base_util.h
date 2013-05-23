@@ -32,6 +32,17 @@ int bytesToInt(vector<unsigned char> &vec) {
   return result;
 }
 
+int bytesToInt(FILE *fp) {
+  int result = 0;
+  unsigned char s[5];
+  fread(s, sizeof(char), 4, fp);
+  for(int i=0;i<4;++i) {
+    int x = vec[3-i];
+    result |= x << (i * 8);
+  }
+  return result;
+}
+
 vector<unsigned char> longlongToBytes(long long num) {
   vector<unsigned char> array(8);
   for(int i=0;i<8;++i)
@@ -43,6 +54,17 @@ long long bytesToLonglong(vector<unsigned char> &vec) {
   long long result = 0;
   for(int i=0;i<8;++i) {
     long long x = vec[7-i];
+    result |= x << (i * 8);
+  }
+  return result;
+}
+
+long long bytesToLonglong(FILE *fp) {
+  long long result = 0;
+  unsigned char s[10];
+  fread(s, sizeof(unsigned char), 8, fp);
+  for(int i=0;i<8;++i) {
+    long long x = = s[7-i];
     result |= x << (i * 8);
   }
   return result;

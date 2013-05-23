@@ -44,6 +44,16 @@ public:
 
   vector<unsigned char> serialize();
   
+  /*
+    load version data from disk
+    @param:
+      fp: the starting pointer of the version
+    @return:
+      size of the version
+      if fail, return -1
+   */
+  int load(FILE *fp);
+
 private:
   int revid;
   int start_time;
@@ -74,6 +84,16 @@ public:
   void sortList();
 
   vector<unsigned char> serialize();
+
+  /*
+    load the document information from disk
+    @param:
+      fp: the pointer of the document in the file
+    @return:
+      the bytes of the document.
+      if fail, return -1
+   */
+  int load(FILE *fp);
 
   // Inherit from basic interval class
   // These function need to be implemented for interval tree use
@@ -132,6 +152,20 @@ vector<unsigned char> Version::serialize() {
   return output;
 }
 
+int load(FILE *fp) {
+  int size = 0;
+  rev_id = bytesToInt(fp);
+  fseek(fp, 4, SEEK_CUR);
+  size += 4;
+  start_time = bytesToInt(fp);
+  fseek(fp, 4, SEEK_CUR);
+  size += 4;
+  freq = bytesToInt(fp);
+  fseek(fp, 4, SEEK_CUR);
+  size += 4;
+  return size;
+}
+
 Document::Document() {}
 Document::~Document() {}
 
@@ -180,6 +214,26 @@ vector<unsigned char> Document::serialize() {
     output.insert(output.end(), trans.begin(), trans.end());
   }
   return output;
+}
+
+int load(FILE *fp) {
+  int size = 0;
+  doc_id = bytesToInt(fp);
+  fseek(fp, 4, SEEK_CUR);
+  size += 4;
+  start_time = bytesToInt(fp);
+  fseek(fp, 4, SEEK_CUR);
+  size += 4;
+  int v_size = bytesToInt(fp);
+  fseek(fp, 4, SEEK_CUR);
+  size += 4;
+  ver_list[i].resize(v_size);
+  for(int i=0;i<v_size;++i) {
+    int move = ver_list[i].load(fp);
+    fseek(fp, move, SEEK_CUR);
+    size += move;
+  }
+  return size;
 }
 
 #endif

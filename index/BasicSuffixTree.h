@@ -79,6 +79,18 @@ public:
   int getNodeId() const;
   int getDepth() const;
 
+
+  /* 
+    load node information from disk
+    @param:
+      fp: the pointer of the node in the file
+    @return:
+      the bytes of the node.
+      if fail, return -1
+   */
+  int load(FILE *fp);
+  
+
   // serialize the data for output to index
   vector<unsigned char> serialize();
 
@@ -215,6 +227,27 @@ vector<unsigned char> SuffixTreeNode::serialize() {
   */
   return output;
 }
+
+int SuffixTreeNode::load(FILE *fp) {
+  int size = 0;
+  node_id = bytesToInt(fp);
+  fseek(fp, 4, SEEK_CUR);
+  size += 4;
+  depth = bytesToInt(fp);
+  fseek(fp, 4, SEEK_CUR);
+  size += 4;
+  int d_size = doc_list.size();
+  fseek(fp, 4, SEEK_CUR);
+  size += 4;
+  doc_ilst[i].resize(d_size);
+  for(int i=0;i<d_size;++i) {
+    int move = doc_list[i].load(fp);
+    fseek(fp, move, SEEK_CUR);
+    size += move;
+  }
+  return size;
+}
+
 
 int SuffixTreeNode::getNodeId() const {
   return node_id;
