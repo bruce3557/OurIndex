@@ -79,6 +79,17 @@ public:
   int getNodeId() const;
   int getDepth() const;
 
+  /*
+    binary search the document that contains the document
+    @param:
+       x: the ending time of the query
+    @return
+       the starting position of the query  
+   */
+  int binary_search(long long x);
+
+  // extract time interval top-k query
+  string query(long long st_time, long long ed_time, long long top_k);
 
   /* 
     load node information from disk
@@ -248,6 +259,42 @@ int SuffixTreeNode::load(FILE *fp) {
   return size;
 }
 
+int SuffixTreeNode::binary_search(long long x) {
+  int st = 0, ed = doc_list.size();
+  while(st < ed) {
+    int mid = (st + ed) >> 1;
+    if( doc_list[mid].GetLowPoint() <= x )
+      st = mid + 1;
+    else
+      ed = mid;
+  }
+  return ed;
+}
+
+string SuffixTreeNode::query(long long st_time, long long ed_time, int top_k) {
+  vector< QueryVer > ans;
+  //int st_pos = binary_search(start_time);
+  //int ed_pos = binary_search(end_time);
+  int st_pos = binary_search(start_time);
+
+  for(int i=st_pos; i < doc_list[i].size();++i) {
+    vector< QueryVer > tmp = doc_list[i].query(start_time, end_time, top_k);
+    vector< QueryVer > v;
+    vector< QueryVer >::iterator pv = ans.begin();
+    vector< QueryVer >::iterator nv = tmp.begin();
+    while( v.size() < top_k && pv != ans.end() && nv != tmp.end() ) {
+      if( pv->getFreq() > nv->getFreq() )
+        v.push_back(*pv);
+      else
+        v.push_back(*nv);
+    }
+    ans = v;
+  }
+  string answer = "";
+  for(vector< QueryVer >::iterator it=ans.begin();it != ans.end();++it)
+    answer += it->toString();
+  return answer;
+}
 
 int SuffixTreeNode::getNodeId() const {
   return node_id;

@@ -33,16 +33,22 @@ class Version
 
 public:
   Version();
-  Version(int _revid, int _start_time, int _freq): revid(_revid), start_time(_start_time), end_time(_start_time), freq(_freq){}
-  Version(int _revid, int _start_time, int _end_time, int _freq);
+  Version(int _revid, long long _start_time, int _freq): revid(_revid), start_time(_start_time), end_time(_start_time), freq(_freq){}
+  Version(int _revid, long long _start_time, long long _end_time, int _freq);
+  Version(Version &ver) {
+    revid = ver.getID();
+    start_time = ver.getStartTime();
+    end_time = ver.getEndTime();
+    freq = ver.getFreq();
+  }
   ~Version();
 
-  int getID() const;
-  int getStartTime() const;
-  int getEndTime() const;
-  int getFreq() const;
+  virtual int getID() const;
+  virtual int getStartTime() const;
+  virtual int getEndTime() const;
+  virtual int getFreq() const;
 
-  vector<unsigned char> serialize();
+  virtual vector<unsigned char> serialize();
   
   /*
     load version data from disk
@@ -52,15 +58,32 @@ public:
       size of the version
       if fail, return -1
    */
-  int load(FILE *fp);
+  virtual int load(FILE *fp);
 
 private:
   int revid;
-  int start_time;
-  int end_time;
+  long long start_time;
+  long long end_time;
   int freq;
 };
 
+class QueryVersion: public Version {
+  QueryVersion(){};
+  ~QueryVersion(){};
+  QueryVersion(int _docid, Version &ver): Version(ver), doc_id(_doc_id) {}
+
+  virtual string toString();
+
+  virtual vector<unsigned char> serialize() {
+    vector<unsigned char> output = intToBytes(docid);
+    vector<unsigned char> prev = Version::serialize();
+    output.insert(output.end(), prev.begin(), prev.end());
+    return output;
+  }
+
+  private:
+    int docid;
+};
 
 class Document 
 {
@@ -83,7 +106,34 @@ public:
   int searchVer(const int query_time);
   void sortList();
 
+  /*
+    find the version that after the time point x
+    @param:
+      x: the time point
+    @return:
+      the first version position after x
+   */
+  int binary_search(long long x);
+
+  /*
+    transform data into bytes stream
+    @return:
+      bytes stream
+   */
   vector<unsigned char> serialize();
+  virtual string toString();
+  
+  /*
+    query the top-k query in the document, 
+    sorting order is by decreasing order
+    @param:
+      st_time: starting time of the query
+      ed_time: ending time of the query
+      top_k: the number of top-k query
+    @return:
+      the top-k version in this query
+   */
+  vector< QueryVer > query(long long st_time, long long ed_time, int top_k);
 
   /*
     load the document information from disk
@@ -103,8 +153,8 @@ public:
 
 private:
   int docid;
-  int start_time;
-  int end_time;
+  long long start_time;
+  long long end_time;
   vector< Version > ver_list;
 
 };
@@ -144,7 +194,7 @@ vector<unsigned char> Version::serialize() {
   vector<unsigned char> trans = intToBytes(rev_id);
   output.insert(output.end(), trans.begin(), trans.end());
   // save start_time
-  trans = intToBytes(start_time);
+  trans = longlongToBytes(start_time);
   output.insert(output.end(), trans.begin(), trans.end());
   // save frequency
   trans = intToBytes(freq);
@@ -152,7 +202,16 @@ vector<unsigned char> Version::serialize() {
   return output;
 }
 
-int load(FILE *fp) {
+string Version::toString() {
+  char x[20];
+  string output = "Rev ID: ";
+  output += string( itoa(revid) );
+  sprintf(x, "\nStarting time: %lld\n Freq: ", start_time);
+  output += string(x);
+  output += string( itoa(freq) ) + string("\n");
+}
+
+int Version::load(FILE *fp) {
   int size = 0;
   rev_id = bytesToInt(fp);
   fseek(fp, 4, SEEK_CUR);
@@ -164,6 +223,13 @@ int load(FILE *fp) {
   fseek(fp, 4, SEEK_CUR);
   size += 4;
   return size;
+}
+
+string QueryVer::toString() {
+  string output = "Doc ID: ";
+  output += string(itoa(docid)) + string("\n");
+  output += Version::toString();
+  return output;
 }
 
 Document::Document() {}
@@ -202,7 +268,7 @@ vector<unsigned char> Document::serialize() {
   vector<unsigned char> trans = intToBytes(doc_id);
   output.insert(output.end(), trans.begin(), trans.end());
   // save start time
-  trans = intToBytes(start_time);
+  trans = longlongToBytes(start_time);
   output.insert(output.end(), trans.begin(), trans.end());
   // save version vector size
   int size = ver_list.size();
@@ -216,7 +282,35 @@ vector<unsigned char> Document::serialize() {
   return output;
 }
 
-int load(FILE *fp) {
+int Document::binary_search(long long x) {
+  int st = 0, ed = ver_list.size();
+  while(st < ed) {
+    int mid = (st + ed) >> 1;
+    if( ver_list[mid].getStartTime() <= x)  st = mid + 1;
+    else  ed = mid;
+  }
+  return ed;
+}
+
+vector< QueryVer > Document::query(long long st_time, long long ed_time, int top_k) {
+  vector< QueryVer > ans;
+  int st_pos = binary_search(st_time);
+  int ed_pos = binary_search(ed_time);
+  if( ver_list[st_pos-1].getStartTime() >= st_time )  --st_pos;
+  for(int i=ed_pos-1;ans.size() < top_k && i >= st_pos;--i)
+    ans.push_back( QueryVer(docid, ver_list[i]) );
+  return ans;
+}
+
+string Document::toString() {
+  string output = "Doc ID: "
+  output += string( itoa(docid) ) + string("\n");
+  for(vector< Version >::iterator it=ver_list.begin();it != ver_list.end();++it)
+    output += string("--------------\n") + it->toString();
+  return output;
+}
+
+int Document::load(FILE *fp) {
   int size = 0;
   doc_id = bytesToInt(fp);
   fseek(fp, 4, SEEK_CUR);

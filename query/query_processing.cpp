@@ -6,11 +6,15 @@
     This file is to do query processing
 */
 
+// C Library
 #include <stdio.h>
 #include <string.h>
 
+// C++ Library
+#include <string>
 #include <set>
 
+// SDSL library
 #include <sdsl/suffix_trees.hpp>
 #include <sdsl/util.hpp>
 
@@ -76,7 +80,10 @@ int main(int argc, char *argv[]) {
     fprintf(stdout, "Please enter the query string:\n");
     if( !gets(s_query) )  break;
     fprintf(stdout, "Please enter the top-k version you want to get:\n");
+    fprintf(stdout, "enter -1 if you want to use default, default: 10\n");
     scanf("%d", &topk);
+    if(topk == -1)  topk = 10;
+
     //
     // TODO (Bruce Kuo):
     //  Add translate to integer functions
@@ -124,6 +131,9 @@ int main(int argc, char *argv[]) {
 
     // TODO (Bruce Kuo):
     //  add top-k extraction
+    string answer = node_info.query(start_time, end_time, topk);
+    fprintf(stdout, "%s\n", answer.c_str());
+    
   }
 
   return 0;
