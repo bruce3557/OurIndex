@@ -37,7 +37,7 @@ int bytesToInt(FILE *fp) {
   unsigned char s[5];
   fread(s, sizeof(char), 4, fp);
   for(int i=0;i<4;++i) {
-    int x = vec[3-i];
+    int x = s[3-i];
     result |= x << (i * 8);
   }
   return result;
