@@ -23,8 +23,10 @@
 #include "base_util.h"
 
 #include <vector>
+#include <string>
 #include <algorithm>
-using std::vector;
+
+using namespace std;
 
 class Version
 {
@@ -133,7 +135,7 @@ public:
     @return:
       the top-k version in this query
    */
-  vector< QueryVer > query(long long st_time, long long ed_time, int top_k);
+  vector< QueryVersion > query(long long st_time, long long ed_time, int top_k);
 
   /*
     load the document information from disk
@@ -225,7 +227,7 @@ int Version::load(FILE *fp) {
   return size;
 }
 
-string QueryVer::toString() {
+string QueryVersion::toString() {
   string output("Doc ID: ");
   output += string(itoa(docid)) + string("\n");
   output += Version::toString();
@@ -292,13 +294,13 @@ int Document::binary_search(long long x) {
   return ed;
 }
 
-vector< QueryVer > Document::query(long long st_time, long long ed_time, int top_k) {
-  vector< QueryVer > ans;
+vector< QueryVersion > Document::query(long long st_time, long long ed_time, int top_k) {
+  vector< QueryVersion > ans;
   int st_pos = binary_search(st_time);
   int ed_pos = binary_search(ed_time);
   if( ver_list[st_pos-1].getStartTime() >= st_time )  --st_pos;
   for(int i=ed_pos-1;ans.size() < top_k && i >= st_pos;--i)
-    ans.push_back( QueryVer(docid, ver_list[i]) );
+    ans.push_back( QueryVersion(docid, ver_list[i]) );
   return ans;
 }
 
