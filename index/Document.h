@@ -70,20 +70,21 @@ private:
 };
 
 class QueryVersion: public Version {
-  QueryVersion(){};
-  ~QueryVersion(){};
-	QueryVersion(QueryVersion &ver): 
-		docid(ver.docid), revid(ver.revid), start_time(ver.start_time), end_time(ver.end_time), freq(ver.freq){}
-  QueryVersion(int _docid, Version &ver): Version(ver), docid(_docid) {}
+	public:
+	  QueryVersion(){};
+		~QueryVersion(){};
+		QueryVersion(QueryVersion &ver): 
+			docid(ver.docid), revid(ver.revid), start_time(ver.start_time), end_time(ver.end_time), freq(ver.freq){}
+	  QueryVersion(int _docid, Version &ver): Version(ver), docid(_docid) {}
 
-  virtual string toString();
+		virtual string toString();
 
-  virtual vector<unsigned char> serialize() {
-    vector<unsigned char> output = intToBytes(docid);
-    vector<unsigned char> prev = Version::serialize();
-    output.insert(output.end(), prev.begin(), prev.end());
-    return output;
-  }
+	  virtual vector<unsigned char> serialize() {
+		  vector<unsigned char> output = intToBytes(docid);
+			vector<unsigned char> prev = Version::serialize();
+	    output.insert(output.end(), prev.begin(), prev.end());
+		  return output;
+	  }
 
   private:
     int docid;
