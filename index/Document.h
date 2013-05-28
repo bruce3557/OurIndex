@@ -72,7 +72,9 @@ private:
 class QueryVersion: public Version {
   QueryVersion(){};
   ~QueryVersion(){};
-  QueryVersion(int _docid, Version &ver): Version(ver), doc_id(_doc_id) {}
+	QueryVersion(QueryVersion &ver): 
+		docid(ver.docid), revid(ver.revid), start_time(ver.start_time), end_time(ver.end_time), freq(ver.freq){}
+  QueryVersion(int _docid, Version &ver): Version(ver), docid(_docid) {}
 
   virtual string toString();
 
