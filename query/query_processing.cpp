@@ -18,6 +18,8 @@
 #include <sdsl/suffix_trees.hpp>
 #include <sdsl/util.hpp>
 
+#include "../index/BasicSuffixTree.h"
+
 using std;
 using sdsl;
 
