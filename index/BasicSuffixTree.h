@@ -61,14 +61,14 @@ public:
   SuffixTreeNode(){};
   SuffixTreeNode(int _node_id): node_id(_node_id){};
   SuffixTreeNode(int _node_id, int _depth): node_id(_node_id), depth(_depth) {
-    for(unsigned int i=0;i<freq.size();++i)
-      freq[i].setFreq(0);
+    for(unsigned int i=0;i<freq_list.size();++i)
+      freq_list[i].setFreq(0);
   }
   ~SuffixTreeNode();
 
   void addDoc(Document &doc);
   void queryInterval(int low, int high);
-  void setFreqList(vector< FreqNode > &f){ freq = f; };
+  void setFreqList(vector< FreqNode > &f){ freq_list = f; };
   void increaseFreq(int idx);
   
   void sortDocs();
@@ -89,7 +89,7 @@ public:
   int binary_search(long long x);
 
   // extract time interval top-k query
-  string query(long long st_time, long long ed_time, long long top_k);
+  string query(long long st_time, long long ed_time, int top_k);
 
   /* 
     load node information from disk
@@ -113,7 +113,7 @@ private:
   int node_id;
   int depth;
   //int_vector<20> freq_list(65536) ;
-  vector< FreqNode > freq;
+  vector< FreqNode > freq_list;
   vector< Document > doc_list;
   //IntervalTree doc_list;
 };
@@ -179,10 +179,10 @@ void SuffixTreeNode::addDoc(Document &doc) {
 }
 
 void SuffixTreeNode::increaseFreq(int idx) {
-  freq[idx].increaseFreq();
+  freq_list[idx].increaseFreq();
 }
 
-void SuffixTreeNode:sortDocs() {
+void SuffixTreeNode::sortDocs() {
   std::sort(doc_list.begin(), doc_list.end(), doc_cmp);
 }
 
@@ -204,7 +204,7 @@ void SuffixTreeNode::buildDocs() {
   }
   sortDocs();
   freq_list.clear();
-  co_appear().clear();
+  doc_appear().clear();
   for(int i=0;i<doc_list.size();++i)
     doc_list[i].sortList();
 }
@@ -250,7 +250,7 @@ int SuffixTreeNode::load(FILE *fp) {
   int d_size = doc_list.size();
   fseek(fp, 4, SEEK_CUR);
   size += 4;
-  doc_ilst[i].resize(d_size);
+  doc_list.resize(d_size);
   for(int i=0;i<d_size;++i) {
     int move = doc_list[i].load(fp);
     fseek(fp, move, SEEK_CUR);
@@ -275,10 +275,10 @@ string SuffixTreeNode::query(long long st_time, long long ed_time, int top_k) {
   vector< QueryVersion > ans;
   //int st_pos = binary_search(start_time);
   //int ed_pos = binary_search(end_time);
-  int st_pos = binary_search(start_time);
+  int st_pos = binary_search(st_time);
 
-  for(int i=st_pos; i < doc_list[i].size();++i) {
-    vector< QueryVersion > tmp = doc_list[i].query(start_time, end_time, top_k);
+  for(int i=st_pos; i < doc_list.size();++i) {
+    vector< QueryVersion > tmp = doc_list[i].query(st_time, ed_time, top_k);
     vector< QueryVersion > v;
     vector< QueryVersion >::iterator pv = ans.begin();
     vector< QueryVersion >::iterator nv = tmp.begin();
@@ -305,7 +305,7 @@ int SuffixTreeNode::getDepth() const {
 }
 
 int SuffixTreeNode::getFreq(int idx) const {
-  return freq[idx].getFreq();
+  return freq_list[idx].getFreq();
 }
 
 #endif
