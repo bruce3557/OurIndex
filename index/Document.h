@@ -22,6 +22,9 @@
 
 #include "base_util.h"
 
+#include <cstdio>
+#include <cstdlib>
+
 #include <vector>
 #include <string>
 #include <algorithm>
@@ -46,12 +49,13 @@ public:
   ~Version();
 
   virtual int getID() const;
-  virtual int getStartTime() const;
-  virtual int getEndTime() const;
+  virtual long long getStartTime() const;
+  virtual long long getEndTime() const;
   virtual int getFreq() const;
 
   virtual vector<unsigned char> serialize();
-  
+  virtual string toString();
+
   /*
     load version data from disk
     @param:
@@ -62,7 +66,7 @@ public:
    */
   virtual int load(FILE *fp);
 
-private:
+protected:
   int revid;
   long long start_time;
   long long end_time;
@@ -74,7 +78,7 @@ class QueryVersion: public Version {
 	  QueryVersion(){};
 		~QueryVersion(){};
 		QueryVersion(QueryVersion &ver): 
-			docid(ver.docid), revid(ver.revid), start_time(ver.start_time), end_time(ver.end_time), freq(ver.freq){}
+			Version::Version(ver.getID(), ver.getStartTime(), ver.getFreq()), docid(ver.getID()){}
 	  QueryVersion(int _docid, Version &ver): Version(ver), docid(_docid) {}
 
 		virtual string toString();
@@ -86,7 +90,7 @@ class QueryVersion: public Version {
 		  return output;
 	  }
 
-  private:
+  protected:
     int docid;
 };
 
@@ -169,8 +173,8 @@ private:
 Version::Version(){}
 Version::~Version(){}
 
-Version::Version(int _revid, int _start_time,
-                 int start_end_time, int _freq) {
+Version::Version(int _revid, long long _start_time,
+                 long long _end_time, int _freq) {
   revid = _revid;
   start_time = _start_time;
   end_time = _end_time;
@@ -181,11 +185,11 @@ int Version::getID() const {
   return revid;
 }
 
-int Version::getStartTime() const {
+long long Version::getStartTime() const {
   return start_time;
 }
 
-int Version::getEndTime() const {
+long long Version::getEndTime() const {
   return end_time;
 }
 
@@ -196,7 +200,7 @@ int Version::getFreq() const {
 vector<unsigned char> Version::serialize() {
   vector<unsigned char> output;
   // save rev id
-  vector<unsigned char> trans = intToBytes(rev_id);
+  vector<unsigned char> trans = intToBytes(revid);
   output.insert(output.end(), trans.begin(), trans.end());
   // save start_time
   trans = longlongToBytes(start_time);
@@ -208,17 +212,19 @@ vector<unsigned char> Version::serialize() {
 }
 
 string Version::toString() {
-  char x[20];
+  char x[33];
   string output("Rev ID: ");
-  output += string( itoa(revid) );
+  sprintf(x, "%d\0", revid);
+  output += string( x );
   sprintf(x, "\nStarting time: %lld\n Freq: ", start_time);
   output += string(x);
-  output += string( itoa(freq) ) + string("\n");
+  sprintf(x, "%d\0", freq);
+  output += string( x ) + string("\n");
 }
 
 int Version::load(FILE *fp) {
   int size = 0;
-  rev_id = bytesToInt(fp);
+  revid = bytesToInt(fp);
   fseek(fp, 4, SEEK_CUR);
   size += 4;
   start_time = bytesToInt(fp);
@@ -231,8 +237,10 @@ int Version::load(FILE *fp) {
 }
 
 string QueryVersion::toString() {
+  char buf[33];
   string output("Doc ID: ");
-  output += string(itoa(docid)) + string("\n");
+  sprintf(buf, "%d\0", docid);
+  output += string(buf) + string("\n");
   output += Version::toString();
   return output;
 }
@@ -270,7 +278,7 @@ vector<unsigned char> Document::serialize() {
   vector<unsigned char> output;
 
   // save doc id
-  vector<unsigned char> trans = intToBytes(doc_id);
+  vector<unsigned char> trans = intToBytes(docid);
   output.insert(output.end(), trans.begin(), trans.end());
   // save start time
   trans = longlongToBytes(start_time);
@@ -308,8 +316,10 @@ vector< QueryVersion > Document::query(long long st_time, long long ed_time, int
 }
 
 string Document::toString() {
+  char buf[33];
   string output("Doc ID: ");
-  output += string( itoa(docid) ) + string("\n");
+  sprintf(buf, "%d\0", docid);
+  output += string( buf ) + string("\n");
   for(vector< Version >::iterator it=ver_list.begin();it != ver_list.end();++it)
     output += string("--------------\n") + it->toString();
   return output;
@@ -317,7 +327,7 @@ string Document::toString() {
 
 int Document::load(FILE *fp) {
   int size = 0;
-  doc_id = bytesToInt(fp);
+  docid = bytesToInt(fp);
   fseek(fp, 4, SEEK_CUR);
   size += 4;
   start_time = bytesToInt(fp);
@@ -326,7 +336,7 @@ int Document::load(FILE *fp) {
   int v_size = bytesToInt(fp);
   fseek(fp, 4, SEEK_CUR);
   size += 4;
-  ver_list[i].resize(v_size);
+  ver_list.resize(v_size);
   for(int i=0;i<v_size;++i) {
     int move = ver_list[i].load(fp);
     fseek(fp, move, SEEK_CUR);
