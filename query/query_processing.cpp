@@ -7,8 +7,8 @@
 */
 
 // C Library
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 
 // C++ Library
 #include <string>

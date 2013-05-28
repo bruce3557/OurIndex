@@ -204,7 +204,7 @@ vector<unsigned char> Version::serialize() {
 
 string Version::toString() {
   char x[20];
-  string output = "Rev ID: ";
+  string output("Rev ID: ");
   output += string( itoa(revid) );
   sprintf(x, "\nStarting time: %lld\n Freq: ", start_time);
   output += string(x);
@@ -226,7 +226,7 @@ int Version::load(FILE *fp) {
 }
 
 string QueryVer::toString() {
-  string output = "Doc ID: ";
+  string output("Doc ID: ");
   output += string(itoa(docid)) + string("\n");
   output += Version::toString();
   return output;
@@ -303,7 +303,7 @@ vector< QueryVer > Document::query(long long st_time, long long ed_time, int top
 }
 
 string Document::toString() {
-  string output = "Doc ID: "
+  string output("Doc ID: ");
   output += string( itoa(docid) ) + string("\n");
   for(vector< Version >::iterator it=ver_list.begin();it != ver_list.end();++it)
     output += string("--------------\n") + it->toString();
