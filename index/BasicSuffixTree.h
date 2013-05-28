@@ -272,16 +272,16 @@ int SuffixTreeNode::binary_search(long long x) {
 }
 
 string SuffixTreeNode::query(long long st_time, long long ed_time, int top_k) {
-  vector< QueryVer > ans;
+  vector< QueryVersion > ans;
   //int st_pos = binary_search(start_time);
   //int ed_pos = binary_search(end_time);
   int st_pos = binary_search(start_time);
 
   for(int i=st_pos; i < doc_list[i].size();++i) {
-    vector< QueryVer > tmp = doc_list[i].query(start_time, end_time, top_k);
-    vector< QueryVer > v;
-    vector< QueryVer >::iterator pv = ans.begin();
-    vector< QueryVer >::iterator nv = tmp.begin();
+    vector< QueryVersion > tmp = doc_list[i].query(start_time, end_time, top_k);
+    vector< QueryVersion > v;
+    vector< QueryVersion >::iterator pv = ans.begin();
+    vector< QueryVersion >::iterator nv = tmp.begin();
     while( v.size() < top_k && pv != ans.end() && nv != tmp.end() ) {
       if( pv->getFreq() > nv->getFreq() )
         v.push_back(*pv);
@@ -291,7 +291,7 @@ string SuffixTreeNode::query(long long st_time, long long ed_time, int top_k) {
     ans = v;
   }
   string answer = "";
-  for(vector< QueryVer >::iterator it=ans.begin();it != ans.end();++it)
+  for(vector< QueryVersion >::iterator it=ans.begin();it != ans.end();++it)
     answer += it->toString();
   return answer;
 }
