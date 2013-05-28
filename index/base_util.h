@@ -64,7 +64,7 @@ long long bytesToLonglong(FILE *fp) {
   unsigned char s[10];
   fread(s, sizeof(unsigned char), 8, fp);
   for(int i=0;i<8;++i) {
-    long long x = = s[7-i];
+    long long x = s[7-i];
     result |= x << (i * 8);
   }
   return result;
