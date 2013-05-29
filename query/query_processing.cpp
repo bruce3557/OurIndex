@@ -20,8 +20,8 @@
 
 #include "../index/BasicSuffixTree.h"
 
-using std;
-using sdsl;
+using namespace std;
+using namespace sdsl;
 
 typedef cst_sada<> tCST;
 

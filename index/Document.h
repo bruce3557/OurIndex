@@ -330,7 +330,7 @@ int Document::load(FILE *fp) {
   docid = bytesToInt(fp);
   fseek(fp, 4, SEEK_CUR);
   size += 4;
-  start_time = bytesToInt(fp);
+  start_time = bytesToLonglong(fp);
   fseek(fp, 4, SEEK_CUR);
   size += 4;
   int v_size = bytesToInt(fp);
