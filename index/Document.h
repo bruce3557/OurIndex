@@ -15,10 +15,6 @@
 #ifndef __DOCUMENT_H__
 #define __DOCUMENT_H__
 
-//#include "../lib/IntervalTree/interval_tree.h"
-
-//#include <sdsl/int_vector.hpp>
-//#include <sdsl/util.hpp>
 
 #include "base_util.h"
 
@@ -29,10 +25,11 @@
 #include <string>
 #include <algorithm>
 
-using namespace std;
+using std::vector;
+using std::string;
+using std::sort;
 
-class Version
-{
+class Version {
 // Definition of version
 // TODO(Bruce Kuo): Discuss that whether end_time need to exists
 
@@ -46,6 +43,7 @@ public:
     end_time = ver.getEndTime();
     freq = ver.getFreq();
   }
+  Version(const Version &ver): revid(ver.getID()), start_time(ver.getStartTime()), end_time(ver.getEndTime()), freq(ver.getFreq()){}
   ~Version();
 
   virtual int getID() const;
@@ -77,7 +75,7 @@ class QueryVersion: public Version {
 	public:
 	  QueryVersion(){};
 		~QueryVersion(){};
-		QueryVersion(QueryVersion &ver): 
+		QueryVersion(const QueryVersion &ver): 
 			Version::Version(ver.getID(), ver.getStartTime(), ver.getFreq()), docid(ver.getID()){}
 	  QueryVersion(int _docid, Version &ver): Version(ver), docid(_docid) {}
 
@@ -110,7 +108,7 @@ public:
   Document();
   Document(int _docid);
   ~Document();
-  void insertVersion(const Version &ver);
+  void insertVersion(const Version &ver){};
   int searchVer(const Version &ver);
   int searchVer(const int query_time);
   void sortList();

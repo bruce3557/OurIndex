@@ -16,11 +16,12 @@
 
 // SDSL library
 #include <sdsl/suffix_trees.hpp>
-#include <sdsl/util.hpp>
 
 #include "../index/BasicSuffixTree.h"
 
-using namespace std;
+using std::string;
+using std::set;
+
 using namespace sdsl;
 
 typedef cst_sada<> tCST;
@@ -41,18 +42,23 @@ bool load_metadata(set< meta_node > &metadata, char *filename) {
   FILE *fp = fopen(filename, "r");
   int x, y;
   while( fscanf(fp, "%d%d", &x, &y) != EOF )
-    metadata.push_back( meta_node(y, x) );
+    metadata.insert( meta_node(y, x) );
   fclose(fp);
+}
+
+void PrintUsage(char *arg) {
+  // TODO (Bruce Kuo):
+  //  Fix here
 }
 
 int main(int argc, char *argv[]) {
   if( argc < 3 ) {
-    PrintUsage(argv);
+    PrintUsage(argv[0]);
     return 0;
   }
 
   tCST cst;
-  if( !load_from_flie(cst, string("cst.idx")) ) {
+  if( !load_from_file(cst, string("cst.idx")) ) {
     fprintf(stderr, "There is no data index, please build the index");
     return 0;
   }
@@ -98,11 +104,11 @@ int main(int argc, char *argv[]) {
     //      now we use forward search
     //  (2) now we assume that the number of query words is less than 8
     //
-    node_t v = cst.root();
+    tCST::node_type v = cst.root();
     string query = string(s_query);
-    string::iterator it = query.begin();
-    for(uint64_t pos=0;it != query.end();++it) {
-      if(forward_search(cst, v, it-query.begin(), *it, pos) > 0) {
+    string::iterator qit = query.begin();
+    for(uint64_t pos=0;qit != query.end();++qit) {
+      if(forward_search(cst, v, qit-query.begin(), *qit, pos) > 0) {
         
       } else {
         break;
@@ -110,22 +116,22 @@ int main(int argc, char *argv[]) {
     }
 
     // Find the word that save in the suffix node
-    set< meta_node >::iterator it;
+    set< meta_node >::iterator mit;
     while( 1 ) {
-      int node_id = v.id();
-      it = metadata.find( meta_node(node_id, -1) );
-      if( it != metadata.end() )  break;
+      int node_id = cst.id(v);
+      mit = metadata.find( meta_node(node_id, -1) );
+      if( mit != metadata.end() )  break;
       v = cst.parent(v);
     }
 
     SuffixTreeNode node_info;
-    if( it != metadata.end() && (it->id) != -1 ) {
+    if( mit != metadata.end() && (mit->id) != -1 ) {
       // move the pointer to the node starting position
-      int st_pos = it->pos;
-      ++it;
-      int ed_pos = it->pos;
+      int st_pos = mit->pos;
+      ++mit;
+      int ed_pos = mit->pos;
       fseek(p_node_info, st_pos, SEEK_SET);
-      node_info.load(p_node);
+      node_info.load(p_node_info);
     } else {
       // TODO (Bruce Kuo):
       //  Dummy node implementation
@@ -137,6 +143,7 @@ int main(int argc, char *argv[]) {
     fprintf(stdout, "%s\n", answer.c_str());
     
   }
+  fclose(p_node_info);
 
   return 0;
 }

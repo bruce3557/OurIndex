@@ -10,7 +10,6 @@
 #define __BASIC_SUFFIX_TREE_H__
 
 #include "Document.h"
-//#include "../lib/IntervalTree/interval_tree.h"
 #include "base_util.h"
 
 #include <algorithm>
@@ -18,6 +17,8 @@
 #include <vector>
 
 using std::vector;
+using std::set;
+using std::sort;
 
 class FreqNode 
 {
@@ -42,6 +43,8 @@ public:
   int getDocid() const;
   int getRevid() const;
   
+  long long getStartTime() {}
+
   // serialize the data for output the freq node information
   vector<unsigned char> serialize();
   
@@ -112,10 +115,8 @@ public:
 private:
   int node_id;
   int depth;
-  //int_vector<20> freq_list(65536) ;
   vector< FreqNode > freq_list;
   vector< Document > doc_list;
-  //IntervalTree doc_list;
 };
 
 
@@ -204,7 +205,7 @@ void SuffixTreeNode::buildDocs() {
   }
   sortDocs();
   freq_list.clear();
-  doc_appear().clear();
+  doc_appear.clear();
   for(int i=0;i<doc_list.size();++i)
     doc_list[i].sortList();
 }
