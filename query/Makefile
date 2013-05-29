@@ -7,5 +7,8 @@ CC_LIB=-lsdsl -ldivsufsort -ldivsufsort64
 all: query-engine
 
 query-engine:
-	$(CC) $(CC_FLAGS) -o query_engine query_processing.cpp $(CC_LIB)
+	$(CC) $(CC_FLAGS) -o ../bin/query_engine query_processing.cpp $(CC_LIB)
 
+clean:
+	rm -rf *.o
+	rm -rf query_engine
