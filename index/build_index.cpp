@@ -195,15 +195,15 @@ void CST_Traversal(tCST &cst) {
 
   // Save to index file
   int position = 0;
-  FILE metadata = fopen("metadata.idx", "w");
-  FILE node_idx = fopen("node_info.idx", "w");
+  FILE *metadata = fopen("metadata.idx", "w");
+  FILE *node_idx = fopen("node_info.idx", "w");
   fprintf(metadata, "0");
   for(int i=0;i<vec.size();++i) {
     vector<unsigned char> x = vec[i].serialize();
     position += x.size();
     fprintf(metadata, " %d %d", vec[i].getNodeId(), position);
     //fwrite(position, 4, 1, metadata);
-    fwrite((const unsigned char *)&x[0], 1, x[i].size(), node_idx);
+    fwrite((const unsigned char *)&x[0], 1, x.size(), node_idx);
   }
   fprintf(metadata, " -1");
   fclose(metadata);
