@@ -108,10 +108,10 @@ public:
   Document();
   Document(int _docid);
   ~Document();
-  void insertVersion(const Version &ver){};
-  int searchVer(const Version &ver);
-  int searchVer(const int query_time);
-  void sortList();
+  virtual void insertVersion(const Version &ver){};
+  virtual int searchVer(const Version &ver);
+  virtual int searchVer(const int query_time);
+  virtual void sortList();
 
   /*
     find the version that after the time point x
@@ -120,14 +120,14 @@ public:
     @return:
       the first version position after x
    */
-  int binary_search(long long x);
+  virtual int binary_search(long long x);
 
   /*
     transform data into bytes stream
     @return:
       bytes stream
    */
-  vector<unsigned char> serialize();
+  virtual vector<unsigned char> serialize();
   virtual string toString();
   
   /*
@@ -140,7 +140,7 @@ public:
     @return:
       the top-k version in this query
    */
-  vector< QueryVersion > query(long long st_time, long long ed_time, int top_k);
+  virtual vector< QueryVersion > query(long long st_time, long long ed_time, int top_k);
 
   /*
     load the document information from disk
@@ -150,7 +150,7 @@ public:
       the bytes of the document.
       if fail, return -1
    */
-  int load(FILE *fp);
+  virtual int load(FILE *fp);
 
   // Inherit from basic interval class
   // These function need to be implemented for interval tree use
@@ -210,10 +210,12 @@ vector<unsigned char> Version::serialize() {
 }
 
 string Version::toString() {
-  char x[33];
+  char x[330];
+  memset(x, 0, sizeof(x));
   string output("Rev ID: ");
-  sprintf(x, "%d\0", revid);
+  sprintf(x, "%d", revid);
   output += string( x );
+  memset(x, 0, sizeof(x));
   sprintf(x, "\nStarting time: %lld\n Freq: ", start_time);
   output += string(x);
   sprintf(x, "%d\0", freq);
@@ -236,8 +238,9 @@ int Version::load(FILE *fp) {
 
 string QueryVersion::toString() {
   char buf[33];
+  memset(buf, 0, sizeof(buf));
   string output("Doc ID: ");
-  sprintf(buf, "%d\0", docid);
+  sprintf(buf, "%d", docid);
   output += string(buf) + string("\n");
   output += Version::toString();
   return output;
@@ -268,8 +271,8 @@ int Document::GetHighPoint() const {
 }
 
 void Document::Print() const {
-  // TODO (Bruce Kuo):
-  //  to present the data in a good manner
+  string output = toString();
+  printf("%s\n", output.c_str());
 }
 
 vector<unsigned char> Document::serialize() {
@@ -315,8 +318,9 @@ vector< QueryVersion > Document::query(long long st_time, long long ed_time, int
 
 string Document::toString() {
   char buf[33];
+  memset(buf, 0, sizeof(buf));
   string output("Doc ID: ");
-  sprintf(buf, "%d\0", docid);
+  sprintf(buf, "%d", docid);
   output += string( buf ) + string("\n");
   for(vector< Version >::iterator it=ver_list.begin();it != ver_list.end();++it)
     output += string("--------------\n") + it->toString();
