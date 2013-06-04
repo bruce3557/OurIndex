@@ -5,8 +5,10 @@ else
   mkdir ./bin
 fi
 
-cd index
+cd ./index
+make clean
 make
 cd ../query
+make clean
 make
 

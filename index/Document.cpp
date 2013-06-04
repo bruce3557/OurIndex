@@ -1,8 +1,6 @@
 #include "Document.h"
 
 // Move implementation here
-Version::Version(){}
-Version::~Version(){}
 
 Version::Version(int _revid, long long _start_time,
                  long long _end_time, int _freq) {

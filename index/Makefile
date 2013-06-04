@@ -22,4 +22,4 @@ base_util:
 
 clean:
 	rm -f *.o
-	rm -f ./build_index
+	rm -f ../index/build_index
