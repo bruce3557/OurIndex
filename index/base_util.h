@@ -10,6 +10,8 @@
 #ifndef __BASE_UTIL_H__
 #define __BASE_UTIL_H__
 
+#include <cstdio>
+
 #include <vector>
 
 using std::vector;

@@ -19,6 +19,7 @@
 #include "base_util.h"
 
 #include <cstdio>
+#include <cstring>
 #include <cstdlib>
 
 #include <vector>
@@ -105,9 +106,9 @@ class Document
 // start time
 
 public:
-  Document();
-  Document(int _docid);
-  ~Document();
+  Document() {};
+  Document(int _docid): docid(_docid) { ver_list.clear(); }
+  ~Document() {};
   virtual void insertVersion(const Version &ver){};
   virtual int searchVer(const Version &ver);
   virtual int searchVer(const int query_time);
@@ -156,7 +157,8 @@ public:
   // These function need to be implemented for interval tree use
   virtual int GetLowPoint() const ;
   virtual int GetHighPoint() const ;
-  virtual void Print() const;
+  virtual long long getStartTime();
+  virtual void Print();
 
 private:
   int docid;
@@ -246,16 +248,12 @@ string QueryVersion::toString() {
   return output;
 }
 
-Document::Document() {}
-Document::~Document() {}
-
-Document::Document(int _docid) {
-  docid = _docid;
-  ver_list.clear();
-}
-
 bool ver_cmp(const Version &a, const Version &b) {
   return (a.getStartTime() < b.getStartTime());
+}
+
+long long Document::getStartTime() {
+  return start_time;
 }
 
 void Document::sortList() {
@@ -270,7 +268,7 @@ int Document::GetHighPoint() const {
   return end_time;
 }
 
-void Document::Print() const {
+void Document::Print() {
   string output = toString();
   printf("%s\n", output.c_str());
 }
@@ -346,5 +344,5 @@ int Document::load(FILE *fp) {
   }
   return size;
 }
-
+#else
 #endif
