@@ -17,6 +17,7 @@
 // SDSL library
 #include <sdsl/suffix_trees.hpp>
 
+#include "../index/Document.h"
 #include "../index/BasicSuffixTree.h"
 
 using std::string;
@@ -46,13 +47,13 @@ bool load_metadata(set< meta_node > &metadata, char *filename) {
   fclose(fp);
 }
 
+
 void PrintUsage(char *arg) {
-  // TODO (Bruce Kuo):
-  //  Fix here
+  printf("Usage: type the command %s\n Then following it will tell you the step\n", arg);
 }
 
 int main(int argc, char *argv[]) {
-  if( argc < 3 ) {
+  if( argc < 1 ) {
     PrintUsage(argv[0]);
     return 0;
   }
@@ -63,7 +64,6 @@ int main(int argc, char *argv[]) {
     return 0;
   }
 
-  //vector<int> metadata;
   set< meta_node > metadata;
   if( !load_metadata(metadata, "metadata.idx") ) {
     fprintf(stderr, "Loading metadata error...");
@@ -117,31 +117,34 @@ int main(int argc, char *argv[]) {
 
     // Find the word that save in the suffix node
     set< meta_node >::iterator mit;
+    vector< QueryVersion > ans;
     while( 1 ) {
       int node_id = cst.id(v);
       mit = metadata.find( meta_node(node_id, -1) );
-      if( mit != metadata.end() )  break;
+      if( mit != metadata.end() ) {
+
+        SuffixTreeNode node_info;
+        if( mit != metadata.end() && (mit->id) != -1 ) {
+          // move the pointer to the node starting position
+          int st_pos = mit->pos;
+          ++mit;
+          int ed_pos = mit->pos;
+          fseek(p_node_info, st_pos, SEEK_SET);
+          node_info.load(p_node_info);
+          vector< QueryVersion > temp = node_info.query(start_time, end_time, topk);
+          ans = merge_answer(ans, temp, topk);
+        } else {
+          // TODO (Bruce Kuo):
+          //  Dummy node implementation
+        }
+      }
       v = cst.parent(v);
     }
 
-    SuffixTreeNode node_info;
-    if( mit != metadata.end() && (mit->id) != -1 ) {
-      // move the pointer to the node starting position
-      int st_pos = mit->pos;
-      ++mit;
-      int ed_pos = mit->pos;
-      fseek(p_node_info, st_pos, SEEK_SET);
-      node_info.load(p_node_info);
-    } else {
-      // TODO (Bruce Kuo):
-      //  Dummy node implementation
-    }
-
-    // TODO (Bruce Kuo):
-    //  add top-k extraction
-    string answer = node_info.query(start_time, end_time, topk);
+    string answer("");
+    for(vector< QueryVersion >::iterator it=ans.begin();it != ans.end();++it)
+      answer += (it->toString()) + string("\n");
     fprintf(stdout, "%s\n", answer.c_str());
-    
   }
   fclose(p_node_info);
 

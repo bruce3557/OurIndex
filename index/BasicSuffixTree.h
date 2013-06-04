@@ -43,10 +43,10 @@ public:
   int getDocid() const;
   int getRevid() const;
   
-  long long getStartTime() {}
+  virtual long long getStartTime() {}
 
   // serialize the data for output the freq node information
-  vector<unsigned char> serialize();
+  virtual vector<unsigned char> serialize();
   
 private:
   int docid;
@@ -69,44 +69,56 @@ public:
   }
   ~SuffixTreeNode();
 
-  void addDoc(Document &doc);
-  void queryInterval(int low, int high);
-  void setFreqList(vector< FreqNode > &f){ freq_list = f; };
-  void increaseFreq(int idx);
+  virtual void addDoc(Document &doc);
+  //virtual void queryInterval(int low, int high);
+  virtual void setFreqList(vector< FreqNode > &f){ freq_list = f; };
+  virtual void increaseFreq(int idx);
   
-  void sortDocs();
+  // sort the document list
+  virtual void sortDocs();
   // get rid of hard code part to save space
-  void buildDocs();
-
-  int getFreq(int idx) const;
-  int getNodeId() const;
-  int getDepth() const;
-
-  /*
-    binary search the document that contains the document
-    @param:
-       x: the ending time of the query
-    @return
-       the starting position of the query  
-   */
-  int binary_search(long long x);
-
-  // extract time interval top-k query
-  string query(long long st_time, long long ed_time, int top_k);
+  virtual void buildDocs();
 
   /* 
-    load node information from disk
-    @param:
-      fp: the pointer of the node in the file
-    @return:
-      the bytes of the node.
-      if fail, return -1
+   * get the frequency of the index i
+   * @param:
+   *    idx: the index
+   * @return:
+   *    the value of document idx
    */
-  int load(FILE *fp);
+  virtual int getFreq(int idx) const;
+  virtual int getNodeId() const;
+  virtual int getDepth() const;
+
+  /*
+   * binary search the document that contains the document
+   * @param:
+   *    x: the ending time of the query
+   * @return
+   *    the starting position of the query  
+   */
+  virtual int binary_search(long long x);
+
+  // extract time interval top-k query
+  virtual vector< QueryVersion > query(long long st_time, long long ed_time, int top_k);
+
+  /* 
+   * load node information from disk
+   * @param:
+   *    fp: the pointer of the node in the file
+   * @return:
+   *    the bytes of the node.
+   *    if fail, return -1
+   */
+  virtual int load(FILE *fp);
   
 
-  // serialize the data for output to index
-  vector<unsigned char> serialize();
+  /*
+   * serialize the data for output to index
+   * @return:
+   *    the byte stream of the node
+   */
+  virtual vector<unsigned char> serialize();
 
   bool operator < (const SuffixTreeNode &t) const {
     return (depth < t.getDepth() || (depth == t.getDepth() && node_id > t.getNodeId()));
@@ -124,6 +136,18 @@ bool doc_cmp(const Document &a, const Document &b) {
   return a.GetLowPoint() < b.GetLowPoint();
 }
 
+vector< QueryVersion > 
+merge_answer(vector< QueryVersion > &a, vector< QueryVersion > &b, int top_k) {
+  vector< QueryVersion > v;
+  vector< QueryVersion >::iterator pv = a.begin();
+  vector< QueryVersion >::iterator nv = b.begin();
+  while( v.size() < top_k && pv != a.end() && nv != b.end() ) {
+    if( pv->getFreq() > nv->getFreq() )
+      v.push_back(*pv);
+    else
+      v.push_back(*nv);
+  }
+}
 
 // move the implementation here
 FreqNode::FreqNode() {
@@ -228,15 +252,6 @@ vector<unsigned char> SuffixTreeNode::serialize() {
     output.insert(output.end(), trans.begin(), trans.end());
   }
 
-  /*
-  Fixed by Bruce Kuo: 2013.05.13
-  replaced by doc_list serialize
-
-    for(unsigned int i=0;i<freq.size();++i) {
-      trans = freq[i].serialize();
-      output.insert(output.end(), trans.begin(), trans.end());
-    }
-  */
   return output;
 }
 
@@ -272,29 +287,15 @@ int SuffixTreeNode::binary_search(long long x) {
   return ed;
 }
 
-string SuffixTreeNode::query(long long st_time, long long ed_time, int top_k) {
+vector< QueryVersion > SuffixTreeNode::query(long long st_time, long long ed_time, int top_k) {
   vector< QueryVersion > ans;
-  //int st_pos = binary_search(start_time);
-  //int ed_pos = binary_search(end_time);
   int st_pos = binary_search(st_time);
 
-  for(int i=st_pos; i < doc_list.size();++i) {
+  for(int i=st_pos; i < doc_list.size() && doc_list[i].getStartTime() < ed_time; ++i) {
     vector< QueryVersion > tmp = doc_list[i].query(st_time, ed_time, top_k);
-    vector< QueryVersion > v;
-    vector< QueryVersion >::iterator pv = ans.begin();
-    vector< QueryVersion >::iterator nv = tmp.begin();
-    while( v.size() < top_k && pv != ans.end() && nv != tmp.end() ) {
-      if( pv->getFreq() > nv->getFreq() )
-        v.push_back(*pv);
-      else
-        v.push_back(*nv);
-    }
-    ans = v;
+    ans = merge_answer(ans, tmp, top_k);
   }
-  string answer = "";
-  for(vector< QueryVersion >::iterator it=ans.begin();it != ans.end();++it)
-    answer += it->toString();
-  return answer;
+  return ans;
 }
 
 int SuffixTreeNode::getNodeId() const {

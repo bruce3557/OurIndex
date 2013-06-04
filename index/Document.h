@@ -156,7 +156,8 @@ public:
   // These function need to be implemented for interval tree use
   virtual int GetLowPoint() const ;
   virtual int GetHighPoint() const ;
-  virtual void Print() const;
+  virtual long long getStartTime();
+  virtual void Print();
 
 private:
   int docid;
@@ -258,6 +259,10 @@ bool ver_cmp(const Version &a, const Version &b) {
   return (a.getStartTime() < b.getStartTime());
 }
 
+long long Document::getStartTime() {
+  return start_time;
+}
+
 void Document::sortList() {
   std::sort(ver_list.begin(), ver_list.end(), ver_cmp);
 }
@@ -270,7 +275,7 @@ int Document::GetHighPoint() const {
   return end_time;
 }
 
-void Document::Print() const {
+void Document::Print() {
   string output = toString();
   printf("%s\n", output.c_str());
 }
