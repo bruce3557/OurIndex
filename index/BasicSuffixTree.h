@@ -20,8 +20,7 @@ using std::vector;
 using std::set;
 using std::sort;
 
-class FreqNode 
-{
+class FreqNode {
 // Help counting the frequency of a pattern in 
 // the abstract tree leaves
 
@@ -43,7 +42,7 @@ public:
   int getDocid() const;
   int getRevid() const;
   
-  virtual long long getStartTime() {}
+  virtual long long getStartTime() { return 0LL; }
 
   // serialize the data for output the freq node information
   virtual vector<unsigned char> serialize();
@@ -54,8 +53,7 @@ private:
   int freq;
 };
 
-class SuffixTreeNode
-{
+class SuffixTreeNode {
 
 // Basic definition of the data for our assumption
 
@@ -131,7 +129,9 @@ private:
   vector< Document > doc_list;
 };
 
+vector< QueryVersion > merge_answer(vector< QueryVersion > &, vector< QueryVersion > &, int);
 
+/*
 bool doc_cmp(const Document &a, const Document &b) {
   return a.GetLowPoint() < b.GetLowPoint();
 }
@@ -309,5 +309,6 @@ int SuffixTreeNode::getDepth() const {
 int SuffixTreeNode::getFreq(int idx) const {
   return freq_list[idx].getFreq();
 }
+*/
 
 #endif

@@ -11,7 +11,6 @@
 #include <sdsl/util.hpp>
 
 #include "BasicSuffixTree.h"
-#include "Document.h"
 
 // C headers
 #include <cstdio>
@@ -22,6 +21,9 @@
 #include <algorithm>
 #include <queue>
 #include <set>
+
+#include "BasicSuffixTree.h"
+#include "Document.h"
 
 using namespace sdsl;
 using namespace std;

@@ -15,9 +15,6 @@
 #ifndef __DOCUMENT_H__
 #define __DOCUMENT_H__
 
-
-#include "base_util.h"
-
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>
@@ -29,6 +26,8 @@
 using std::vector;
 using std::string;
 using std::sort;
+
+#include "base_util.h"
 
 class Version {
 // Definition of version
@@ -93,9 +92,7 @@ class QueryVersion: public Version {
     int docid;
 };
 
-class Document 
-{
-
+class Document {
 // Basic document class
 // This must inherit interval class because document will be
 // treated as a node in interval tree
@@ -105,33 +102,38 @@ class Document
 // We can treat that each doc as a line and we just save the 
 // start time
 
-public:
-  Document() {};
-  Document(int _docid): docid(_docid) { ver_list.clear(); }
-  ~Document() {};
-  virtual void insertVersion(const Version &ver){};
-  virtual int searchVer(const Version &ver);
-  virtual int searchVer(const int query_time);
-  virtual void sortList();
+  public:
+    Document();
+    Document(int _docid);
+    Document(const Document &doc);
+    ~Document();
 
-  /*
+    virtual void insertVersion(const Version &ver){}
+    //virtual int searchVer(const Version &ver);
+    //virtual int searchVer(const int query_time);
+    virtual void sortList();
+
+
+    virtual int getID() const { return docid; }
+    virtual vector< Version > getVerList() const { return ver_list; }
+    /*
     find the version that after the time point x
     @param:
       x: the time point
     @return:
       the first version position after x
-   */
-  virtual int binary_search(long long x);
+    */
+    virtual int binary_search(long long x);
 
-  /*
+    /*
     transform data into bytes stream
     @return:
       bytes stream
-   */
-  virtual vector<unsigned char> serialize();
-  virtual string toString();
+    */
+    virtual vector<unsigned char> serialize();
+    virtual string toString();
   
-  /*
+    /*
     query the top-k query in the document, 
     sorting order is by decreasing order
     @param:
@@ -140,35 +142,36 @@ public:
       top_k: the number of top-k query
     @return:
       the top-k version in this query
-   */
-  virtual vector< QueryVersion > query(long long st_time, long long ed_time, int top_k);
+    */
+    virtual vector< QueryVersion > query(long long st_time, long long ed_time, int top_k);
 
-  /*
+    /*
     load the document information from disk
     @param:
       fp: the pointer of the document in the file
     @return:
       the bytes of the document.
       if fail, return -1
-   */
-  virtual int load(FILE *fp);
+    */
+    virtual int load(FILE *fp);
 
-  // Inherit from basic interval class
-  // These function need to be implemented for interval tree use
-  virtual int GetLowPoint() const ;
-  virtual int GetHighPoint() const ;
-  virtual long long getStartTime();
-  virtual void Print();
+    // Inherit from basic interval class
+    // These function need to be implemented for interval tree use
+    virtual int GetLowPoint() const ;
+    virtual int GetHighPoint() const ;
+    virtual long long getStartTime();
+    virtual void Print();
 
-private:
-  int docid;
-  long long start_time;
-  long long end_time;
-  vector< Version > ver_list;
-
+  private:
+    int docid;
+    long long start_time;
+    long long end_time;
+    vector< Version > ver_list;
 };
 
+bool ver_cmp(const Version &, const Version &);
 
+/*
 // Move implementation here
 Version::Version(){}
 Version::~Version(){}
@@ -345,4 +348,5 @@ int Document::load(FILE *fp) {
   return size;
 }
 #else
+*/
 #endif

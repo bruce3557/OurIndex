@@ -1,28 +1,5 @@
-/*
- * Author: Bruce Kuo
- * Date: 2013.04.26
- * 
- * Description:
- *   Some basic library which does not include in built_in 
- *   funcitons
- */
+#include "base_util.h"
 
-#ifndef __BASE_UTIL_H__
-#define __BASE_UTIL_H__
-
-#include <cstdio>
-
-#include <vector>
-
-using std::vector;
-vector<unsigned char> intToBytes(int num);
-int bytesToInt(vector<unsigned char> &vec);
-int bytesToInt(FILE *fp);
-vector<unsigned char> longlongToBytes(long long num);
-long long bytesToLonglong(vector<unsigned char> &vec);
-long long bytesToLonglong(FILE *fp);
-
-/*
 vector<unsigned char> intToBytes(int num) {
   // translate integer to byte array
   vector<unsigned char> array(4);
@@ -78,5 +55,4 @@ long long bytesToLonglong(FILE *fp) {
   }
   return result;
 }
-*/
-#endif
+

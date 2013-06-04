@@ -19,7 +19,6 @@
 
 #include "../index/Document.h"
 #include "../index/BasicSuffixTree.h"
-#include "../index/Document.h"
 
 using std::string;
 using std::set;
