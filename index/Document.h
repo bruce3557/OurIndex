@@ -19,6 +19,7 @@
 #include "base_util.h"
 
 #include <cstdio>
+#include <cstring>
 #include <cstdlib>
 
 #include <vector>
@@ -105,9 +106,9 @@ class Document
 // start time
 
 public:
-  Document();
-  Document(int _docid);
-  ~Document();
+  Document() {};
+  Document(int _docid): docid(_docid) { ver_list.clear(); }
+  ~Document() {};
   virtual void insertVersion(const Version &ver){};
   virtual int searchVer(const Version &ver);
   virtual int searchVer(const int query_time);
@@ -247,14 +248,6 @@ string QueryVersion::toString() {
   return output;
 }
 
-Document::Document() {}
-Document::~Document() {}
-
-Document::Document(int _docid) {
-  docid = _docid;
-  ver_list.clear();
-}
-
 bool ver_cmp(const Version &a, const Version &b) {
   return (a.getStartTime() < b.getStartTime());
 }
@@ -351,5 +344,5 @@ int Document::load(FILE *fp) {
   }
   return size;
 }
-
+#else
 #endif
