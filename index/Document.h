@@ -19,6 +19,7 @@
 #include <cstring>
 #include <cstdlib>
 
+#include <set>
 #include <vector>
 #include <string>
 #include <algorithm>
@@ -168,6 +169,40 @@ class Document {
     long long end_time;
     vector< Version > ver_list;
 };
+
+struct DocObject {
+  int docid;
+  int revid;
+  int id;
+  long long start_time;
+
+  DocObject(){}
+  DocObject(int _id, int _docid, int _revid, long long st_time): 
+    id(_id), docid(_docid), revid(_revid), start_time(st_time) {}
+
+  bool operator < (const DocObject &t) const {
+    return docid < t.docid || (docid == t.docid && revid < t.revid);
+  }
+};
+
+int doc_count;
+set< DocObject > docObj;
+
+void buildDocSet(char *filename) {
+  // when the program start, it must run this function
+  
+  docObj.clear();
+  FILE *fp = fopen(filename, "r");
+  int docid, revid;
+  char time_str[100];
+  doc_count = 1;
+  while( fscanf("%d%d%s", &docid, &revid, time_str) != EOF ) {
+    long long ot_time = timeToLonglong(time_str);
+    docObj.insert(doc_count, docid, revid, ot_time);
+    ++doc_count;
+  }
+  flose(fp);
+}
 
 bool ver_cmp(const Version &, const Version &);
 #endif

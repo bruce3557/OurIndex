@@ -69,7 +69,7 @@ public:
 
   virtual void addDoc(Document &doc);
   //virtual void queryInterval(int low, int high);
-  virtual void setFreqList(vector< FreqNode > &f){ freq_list = f; };
+  virtual void setFreqList(vector< FreqNode > &f){ freq_list = f; }
   virtual void increaseFreq(int idx);
   
   // sort the document list
