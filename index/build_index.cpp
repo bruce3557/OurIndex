@@ -30,7 +30,8 @@ using namespace std;
 
 FILE *input;
 
-typedef cst_sada<> tCST;
+//typedef cst_sada<> tCST;
+typedef cst_sada<csa_bitcompressed<int_alphabet<> > > tCST;
 
 int num_doc;
 int DOCID[200000];
@@ -226,17 +227,9 @@ int main(int argc, char *argv[]) {
   input = fopen(argv[1], "r");
   
   tCST cst;
-  construct(cst, argv[1], 1);
+  construct(cst, argv[1], 'd');
   
   CST_Traversal(cst);
-
-
-  // Save index
-  //char opt_file[50];
-  //strcpy(opt_file, argv[1]);
-  //strcpy(opt_file, ".idx");
-  //store_to_file(cst, opt_file);
-
 
   return 0;
 }
