@@ -190,3 +190,17 @@ int Document::load(FILE *fp) {
   }
   return size;
 }
+
+void buildDocSet(char *filename, set< DocObject > &docObj, int &doc_count) {
+  docObj.clear();
+  FILE *fp = fopen(filename, "r");
+  int docid, revid;
+  char time_str[100];
+  doc_count = 1;
+  while( fscanf(fp, "%d%d%s", &docid, &revid, time_str) != EOF ) {
+    long long ot_time = timeToLonglong(time_str);
+    docObj.insert(DocObject(doc_count, docid, revid, ot_time));
+    ++doc_count;
+  }
+  fclose(fp);
+}

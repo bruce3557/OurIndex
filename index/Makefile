@@ -6,7 +6,7 @@ CC_FLAGS=-Wall -g -O3 -std=c++0x -pedantic -I$(LIB_PATH)/include -L$(LIB_PATH)/l
 CCLIB=-lsdsl -ldivsufsort -ldivsufsort64
 
 all: build_index suffixnode document base_util
-	$(CC) $(CC_FLAGS) ./base_util.o ./Document.o ./BasicSuffixTree.o ./build_index.o -o ../bin/build_index $(CCLIB)
+	$(CC) $(CC_FLAGS) ./base_util.o ./Document.o ./BasicSuffixTree.o ./build_index.o -o ../bin/build_index.x $(CCLIB)
 
 build_index:
 	$(CC) $(CC_FLAGS) -c build_index.cpp $(CCLIB) 

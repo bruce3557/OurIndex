@@ -59,9 +59,12 @@ bool vec_cmp(const SuffixTreeNode &a, const SuffixTreeNode &b) {
 
 void CST_Traversal(tCST &cst) {
   int_vector<> docsign;
-  unsigned char dollar_str[] = "$";
-  
-  locate(cst, dollar_str, dollar_str + 1, docsign);
+  //unsigned char dollar_str[] = "1";
+  //int dollar_str[] = {1};
+  int_vector<> dollar_str(1);
+  dollar_str[0] = 1;
+
+  locate(cst, dollar_str.begin(), dollar_str.end(), docsign);
   std::sort(docsign.begin(), docsign.end());
 
   int num_docs = docsign.size();
@@ -231,6 +234,7 @@ int main(int argc, char *argv[]) {
   
   CST_Traversal(cst);
 
+  fclose(input);
   return 0;
 }
 

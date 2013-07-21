@@ -11,6 +11,7 @@
 #define __BASE_UTIL_H__
 
 #include <cstdio>
+#include <cstring>
 
 #include <vector>
 
@@ -21,8 +22,9 @@ int bytesToInt(FILE *fp);
 vector<unsigned char> longlongToBytes(long long num);
 long long bytesToLonglong(vector<unsigned char> &vec);
 long long bytesToLonglong(FILE *fp);
+long long timeToLonglong(char *time_string);
 
-
+/*
 long long timeToLonglong(char *time_string) {
   // this is for parsing the string from Weiru
   //
@@ -30,11 +32,12 @@ long long timeToLonglong(char *time_string) {
   //   2001-11-28T13:32:25Z
   int len = strlen(time_string);
   long long result = 0;
-  for(int i=0;i<len;++i) {
+  for(int i=0;i<len;++i)
     if(time_string[i] >= '0' && time_string[i] <= '9')
       result = result*10 + time_string[i] - '0';
   return result;
 }
+*/
 /*
 vector<unsigned char> intToBytes(int num) {
   // translate integer to byte array

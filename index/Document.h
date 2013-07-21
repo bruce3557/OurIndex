@@ -27,6 +27,7 @@
 using std::vector;
 using std::string;
 using std::sort;
+using std::set;
 
 #include "base_util.h"
 
@@ -185,25 +186,7 @@ struct DocObject {
   }
 };
 
-int doc_count;
-set< DocObject > docObj;
-
-void buildDocSet(char *filename) {
-  // when the program start, it must run this function
-  
-  docObj.clear();
-  FILE *fp = fopen(filename, "r");
-  int docid, revid;
-  char time_str[100];
-  doc_count = 1;
-  while( fscanf("%d%d%s", &docid, &revid, time_str) != EOF ) {
-    long long ot_time = timeToLonglong(time_str);
-    docObj.insert(doc_count, docid, revid, ot_time);
-    ++doc_count;
-  }
-  flose(fp);
-}
-
+void buildDocSet(char *filename, set< DocObject > &docObj, int &doc_count);
 bool ver_cmp(const Version &, const Version &);
 #endif
 
