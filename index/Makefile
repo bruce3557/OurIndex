@@ -1,7 +1,7 @@
 LIB_PATH=$(CURDIR)/../lib/sdsl-lite
 
 CC=g++
-CC_FLAGS=-Wall -g -O3 -std=c++0x -pedantic -I$(LIB_PATH)/include -L$(LIB_PATH)/lib -DNDEBUG -msse4.2
+CC_FLAGS=-Wall -g -O2 -std=c++0x -pedantic -I$(LIB_PATH)/include -L$(LIB_PATH)/lib -DNDEBUG -msse4.2
 #CCLIB=-lsdsl -ldivsufsort -ldivsufsort64 -ldl -ltcl -lefence
 CCLIB=-lsdsl -ldivsufsort -ldivsufsort64
 

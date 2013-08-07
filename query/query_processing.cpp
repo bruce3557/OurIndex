@@ -25,7 +25,7 @@ using std::set;
 
 using namespace sdsl;
 
-typedef cst_sada<> tCST;
+typedef cst_sada<csa_bitcompressed<int_alphabet<> >> tCST;
 
 struct meta_node {
   int id, pos;
@@ -42,9 +42,11 @@ struct meta_node {
 bool load_metadata(set< meta_node > &metadata, char *filename) {
   FILE *fp = fopen(filename, "r");
   int x, y;
-  while( fscanf(fp, "%d%d", &x, &y) != EOF )
+  while( fscanf(fp, "%d%d", &x, &y) != EOF ) {
     metadata.insert( meta_node(y, x) );
+  }
   fclose(fp);
+  return true;
 }
 
 
@@ -76,6 +78,7 @@ int main(int argc, char *argv[]) {
     return 0;
   }
 
+  printf("AFTER LOADING...\n");
   char s_query[510];
   while(1) {
     long long start_time, end_time;
@@ -105,8 +108,11 @@ int main(int argc, char *argv[]) {
     //  (2) now we assume that the number of query words is less than 8
     //
     tCST::node_type v = cst.root();
-    string query = string(s_query);
-    string::iterator qit = query.begin();
+    //string query = string(s_query);
+    //string::iterator qit = query.begin();
+    int_vector<> query(2);
+    query[0] = 1 , query[1] = 2;//query[2] = 31; 
+    int_vector<>::iterator qit = query.begin();
     for(uint64_t pos=0;qit != query.end();++qit) {
       if(forward_search(cst, v, qit-query.begin(), *qit, pos) > 0) {
         
@@ -114,12 +120,14 @@ int main(int argc, char *argv[]) {
         break;
       }
     }
+    printf("After finding pattern...\n");
 
     // Find the word that save in the suffix node
     set< meta_node >::iterator mit;
     vector< QueryVersion > ans;
     while( 1 ) {
       int node_id = cst.id(v);
+      printf("%d\n",node_id);
       mit = metadata.find( meta_node(node_id, -1) );
       if( mit != metadata.end() ) {
 
@@ -138,6 +146,8 @@ int main(int argc, char *argv[]) {
           //  Dummy node implementation
         }
       }
+      if (v == cst.root() ) break;
+      if (v == cst.parent(v)) break;
       v = cst.parent(v);
     }
 

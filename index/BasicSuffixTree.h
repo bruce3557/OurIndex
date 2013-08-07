@@ -65,6 +65,15 @@ public:
     for(unsigned int i=0;i<freq_list.size();++i)
       freq_list[i].setFreq(0);
   }
+  SuffixTreeNode(int _node_id, int _depth, int _num_doc): node_id(_node_id), depth(_depth) {
+    freq_list.resize(_num_doc);
+    for(unsigned int i=0;i<_num_doc;++i)
+        freq_list[i].setFreq(0);
+  }
+  SuffixTreeNode(int _node_id, int _depth, vector< FreqNode > &_freq): node_id(_node_id), depth(_depth) { 
+    for(int i=0;i<_freq.size();++i)
+        freq_list.push_back(_freq[i]);
+  }
   ~SuffixTreeNode();
 
   virtual void addDoc(Document &doc);

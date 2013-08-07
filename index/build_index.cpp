@@ -34,8 +34,8 @@ FILE *input;
 typedef cst_sada<csa_bitcompressed<int_alphabet<> > > tCST;
 
 int num_doc;
-int DOCID[200000];
-int REVID[200000];
+int DOCID[1000000];
+int REVID[1000000];
 
 int locate_doc(int_vector<> &REVID, int pos) {
   // locate which document contains this string
@@ -57,10 +57,25 @@ bool vec_cmp(const SuffixTreeNode &a, const SuffixTreeNode &b) {
   return a.getNodeId() < b.getNodeId();
 }
 
+void build_docids(char *path, int num_docs) {
+  printf("reading %s...\n", path);
+  FILE *fp = fopen(path, "r");
+  if(fp == NULL) {
+    printf("GG");
+    return;
+  }
+  int i = 0;
+  printf("start reading!\n");
+  while( fscanf(fp, "%d%d", &DOCID[i], &REVID[i]) != EOF ) {
+    ++i;
+  }
+}
+
 void CST_Traversal(tCST &cst) {
   int_vector<> docsign;
   //unsigned char dollar_str[] = "1";
   //int dollar_str[] = {1};
+  printf("Start building...");
   int_vector<> dollar_str(1);
   dollar_str[0] = 1;
 
@@ -68,9 +83,11 @@ void CST_Traversal(tCST &cst) {
   std::sort(docsign.begin(), docsign.end());
 
   int num_docs = docsign.size();
-  int_vector<> docprev(num_docs + 1);
+  printf("num_docs = %d\n", num_docs);
+  vector<int> docprev(num_docs + 2);
   for(int i = 0;i <= num_docs;++i)
     docprev[i] = -1;
+  build_docids("/home/bruce3557/Data/Result_2.8G/total_id", num_docs);
 
   /*
    * TODO (Bruce Kuo):
@@ -80,6 +97,7 @@ void CST_Traversal(tCST &cst) {
    * if we can)
    */
 
+  printf("Starting build HSV framework...\n");
   queue< SuffixTreeNode > SQ;
   for(tCST::const_iterator it = cst.begin(); it != cst.end(); ++it) {
     if( it.visit() == 1 ) {
@@ -87,11 +105,12 @@ void CST_Traversal(tCST &cst) {
       int depth = cst.depth(v);
     
       if( depth == 8 ) {
+        //printf("QQQ\n");
         // To traverse the nodes at this subtree
         int lid = cst.lb(v);
         int rid = cst.rb(v);
         vector< FreqNode > freq(num_docs + 1);
-        for(int i = 0;i <= num_docs; ++i) {
+        for(int i = 0;i < num_docs; ++i) {
           freq[i] = FreqNode(DOCID[i], REVID[i]);
         }
         for(int i = lid;i <= rid;++i) {
@@ -100,13 +119,17 @@ void CST_Traversal(tCST &cst) {
         }
 
         int node_id = cst.id(v);
-        SQ.push( SuffixTreeNode(node_id, depth) );
+        SQ.push( SuffixTreeNode(node_id, depth, freq) );
       }
     }
   }
 
+  printf("GO, %d\n", SQ.size());
+  fflush(stdout);
+  num_doc = num_docs;
   set< SuffixTreeNode > STN;
   priority_queue< SuffixTreeNode > PQ;
+  int  c_c = 0;
   while( !SQ.empty() ) {
     SuffixTreeNode x = SQ.front();
     SQ.pop();
@@ -116,7 +139,6 @@ void CST_Traversal(tCST &cst) {
         tCST::node_type v = cst.inv_id( x.getNodeId() );  
         tCST::node_type u = cst.inv_id( docprev[i] );
         tCST::node_type lca = cst.lca(u, v);
-
         int lca_id = cst.id(lca);
         int lca_depth = cst.depth(lca);
         //
@@ -129,12 +151,12 @@ void CST_Traversal(tCST &cst) {
         if( it != STN.end() ) {
           // Found SuffixTreeNode
           SuffixTreeNode tx = (*it);
-          STN.erase(it);
+          STN.erase(*it);
           tx.increaseFreq(i);
           STN.insert(tx);
         } else {
           // Not Found
-          SuffixTreeNode tx = SuffixTreeNode(lca_id, lca_depth);
+          SuffixTreeNode tx = SuffixTreeNode(lca_id, lca_depth, num_doc);
           tx.increaseFreq(i);
           STN.insert(tx);
         }
@@ -143,9 +165,13 @@ void CST_Traversal(tCST &cst) {
     }
   }
 
-  for(set< SuffixTreeNode >::iterator it=STN.begin(); it != STN.end() ; ++it)
+  printf("Build up structure...\n");
+  printf("STN size = %d\n", STN.size());
+
+  for(set< SuffixTreeNode >::iterator it=STN.begin(); it != STN.end() ; ++it) {
+    if(it == STN.end()) break;
     PQ.push(*it);
-   
+  }
   /*
    * Iterate traverse each level's LCA until root.
    *
@@ -167,7 +193,6 @@ void CST_Traversal(tCST &cst) {
           tCST::node_type v = cst.inv_id(x.getNodeId());
           tCST::node_type u = cst.inv_id(docprev[i]);
           tCST::node_type lca = cst.lca(u, v);
-
           int lca_id = cst.id(lca);
           int lca_depth = cst.depth(lca);
           set< SuffixTreeNode >::iterator it = MTN.find( SuffixTreeNode(lca_id, lca_depth) );
@@ -177,7 +202,7 @@ void CST_Traversal(tCST &cst) {
             tx.increaseFreq(i);
             MTN.insert(tx);
           } else {
-            SuffixTreeNode tx = SuffixTreeNode(lca_id, lca_depth);
+            SuffixTreeNode tx = SuffixTreeNode(lca_id, lca_depth, num_doc);
             tx.increaseFreq(i);
             MTN.insert(tx);
           }
@@ -192,13 +217,15 @@ void CST_Traversal(tCST &cst) {
     }
     MTN.clear();
   }
-  
+ 
+  printf("STN size = %d\n", STN.size());
   vector< SuffixTreeNode > vec;
   for(set< SuffixTreeNode >::iterator it=STN.begin();it != STN.end(); ++it)
     vec.push_back(*it);
   std::sort(vec.begin(), vec.end(), vec_cmp);
   STN.clear();
 
+  printf("Start write to output file\n");
   // Save to index file
   int position = 0;
   FILE *metadata = fopen("metadata.idx", "w");

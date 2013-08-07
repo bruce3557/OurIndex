@@ -25,6 +25,7 @@ FreqNode::FreqNode() {
 
 FreqNode::FreqNode(int _docid, int _revid) {
   docid = _docid; revid = _revid;
+  freq = 0;
 }
 
 FreqNode::~FreqNode(){}
