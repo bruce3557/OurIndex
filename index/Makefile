@@ -7,12 +7,15 @@ CCLIB=-lsdsl -ldivsufsort -ldivsufsort64
 
 all: build_index suffixnode document base_util
 	$(CC) $(CC_FLAGS) ./base_util.o ./Document.o ./BasicSuffixTree.o ./build_index.o -o ../bin/build_index.x $(CCLIB)
+	$(CC) $(CC_FLAGS) ./base_util.o ./Document.o ./RSuffixTree.o ./rtree_build_index.o -o ../bin/rtree_index.x $(CCLIB)
 
 build_index:
 	$(CC) $(CC_FLAGS) -c build_index.cpp $(CCLIB) 
+	$(CC) $(CC_FLAGS) -c rtree_build_index.cpp $(CCLIB)
 
 suffixnode:
 	$(CC) $(CC_FLAGS) -c BasicSuffixTree.cpp $(CCLIB)
+	$(CC) $(CC_FLAGS) -c RSuffixTree.cpp $(CCLIB)
 
 document:
 	$(CC) $(CC_FLAGS) -c Document.cpp $(CCLIB)
