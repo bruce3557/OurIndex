@@ -37,7 +37,8 @@ int num_doc;
 int DOCID[1000000];
 int REVID[1000000];
 
-int locate_doc(int_vector<> &REVID, int pos) {
+int 
+locate_doc(int_vector<> &REVID, int pos) {
   // locate which document contains this string
   int st = 0;
   int ed = REVID.size();
@@ -52,18 +53,20 @@ int locate_doc(int_vector<> &REVID, int pos) {
   return ed;
 }
 
+
 // compare function for sorting node list to output
-bool vec_cmp(const SuffixTreeNode &a, const SuffixTreeNode &b) {
+bool 
+vec_cmp(const SuffixTreeNode &a, const SuffixTreeNode &b) {
   return a.getNodeId() < b.getNodeId();
 }
 
-void build_docids(char *path, int num_docs) {
+
+void 
+build_docids(char *path, int num_docs) {
   printf("reading %s...\n", path);
   FILE *fp = fopen(path, "r");
-  if(fp == NULL) {
-    printf("GG");
+  if(fp == NULL)
     return;
-  }
   int i = 0;
   printf("start reading!\n");
   while( fscanf(fp, "%d%d", &DOCID[i], &REVID[i]) != EOF ) {
@@ -71,7 +74,9 @@ void build_docids(char *path, int num_docs) {
   }
 }
 
-void CST_Traversal(tCST &cst) {
+
+void 
+CST_Traversal(tCST &cst, int res_depth=8) {
   int_vector<> docsign;
   //unsigned char dollar_str[] = "1";
   //int dollar_str[] = {1};
@@ -104,8 +109,7 @@ void CST_Traversal(tCST &cst) {
       tCST::node_type v = *it;
       int depth = cst.depth(v);
     
-      if( depth == 8 ) {
-        //printf("QQQ\n");
+      if( depth == res_depth ) {
         // To traverse the nodes at this subtree
         int lid = cst.lb(v);
         int rid = cst.rb(v);

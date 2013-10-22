@@ -59,7 +59,7 @@ void RSuffixTreeNode::buildDocs() {
       set< DocObject >::iterator it = docObj.find(DocObject(docid, revid, 0));
       if(freq != -1) {
         Rect rect(it->st_id, it->ed_id, freq, docid, revid);
-        RTree.Insert(rect.min, rect.max, docid);
+        rtree.Insert(rect.min, rect.max, docid);
       }
       st_doc = docid;
       st_rev = revid;
