@@ -81,10 +81,14 @@ CST_Traversal(tCST &cst, int res_depth=8) {
   //unsigned char dollar_str[] = "1";
   //int dollar_str[] = {1};
   printf("Start building...");
+  
+  memory_manager::use_hugepages();
   int_vector<> dollar_str(1);
   dollar_str[0] = 1;
 
-  locate(cst, dollar_str.begin(), dollar_str.end(), docsign);
+
+  locate(cst, dollar_str.begin(), dollar_str.end());
+  //locate(cst, dollar_str.begin(), dollar_str.end(), docsign);
   std::sort(docsign.begin(), docsign.end());
 
   int num_docs = docsign.size();
