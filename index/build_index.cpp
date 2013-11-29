@@ -82,7 +82,7 @@ CST_Traversal(tCST &cst, int res_depth=8) {
   //int dollar_str[] = {1};
   printf("Start building...");
   
-  memory_manager::use_hugepages();
+  //memory_manager::use_hugepages();
   int_vector<> dollar_str(1);
   dollar_str[0] = 1;
 
@@ -263,7 +263,7 @@ int main(int argc, char *argv[]) {
   }
 
   input = fopen(argv[1], "r");
-  
+  memory_manager::use_hugepages(10ULL * 1024ULL * 1024ULL); 
   tCST cst;
   construct(cst, argv[1], 'd');
   

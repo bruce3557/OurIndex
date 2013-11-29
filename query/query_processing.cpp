@@ -78,6 +78,7 @@ int main(int argc, char *argv[]) {
     return 0;
   }
 
+  memory_manager::use_hugepages();
   printf("AFTER LOADING...\n");
   char s_query[510];
   while(1) {

@@ -204,3 +204,9 @@ void buildDocSet(char *filename, set< DocObject > &docObj, int &doc_count) {
   }
   fclose(fp);
 }
+
+DocObject &getDocInfo(int id, set< DocObject > &docObj) {
+  set< DocObject > it = docObj.find(DocObject(id));
+  if(it == NULL)  return DocObject(-1);
+  return (*it);
+}

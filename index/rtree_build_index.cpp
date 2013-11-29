@@ -70,16 +70,19 @@ CST_Traversal(tCST &cst) {
   int_vector<> docsign;
   string dollar_str("$");
 
+
+  set< DocObject > docObj; 
   locate(cst, dollar_str.begin(), dollar_str.end(), docsign);
   //std::sort(docsign.begin(), docsign,end());
-  // build up doc_obj
-  //buildDocSet();
   
   int num_docs = docsign.size();
   int_vector<> docprev(num_docs + 1);
   for(int i = 0;i <= num_docs;++i)
     docprev[i] = -1;
   build_docids("/home/bruce3557/Data/Result_2.8G/total_id", num_docs);
+
+  //build up doc_obj
+  buildDocSet("/home/bruce3557/Data/Result_2.8G/total_id", docObj);
 
 
   printf("Starting build HSV + Rtree framework...\n");

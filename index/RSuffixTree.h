@@ -18,6 +18,13 @@ struct Rect {
    * the R-Tree element of a document
    */
   Rect(){}
+  Rect(int min_time, int max_time, int _score, int _org_id) {
+    min[0] = min_time;
+    max[0] = max_time;
+    score = score;
+    min[1] = max[1] = score;
+    org_id = _org_id;
+  }
   Rect(int min_time, int max_time, int _score, int _doc_id, int _rev_id) {
     min[0] = min_time;
     max[0] = max_time;
@@ -29,6 +36,7 @@ struct Rect {
 
   // 0 is time
   // 1 is score
+  int org_id;
   int doc_id;
   int rev_id;
   int score;

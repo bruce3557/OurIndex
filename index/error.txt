@@ -1,0 +1,172 @@
+g++ -Wall -g -O2 -std=c++0x -pedantic -I/home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include -L/home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/lib -DNDEBUG -msse4.2 -c build_index.cpp -lsdsl -ldivsufsort -ldivsufsort64 
+In file included from /home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/int_vector.hpp:34,
+                 from /home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/algorithms_for_compressed_suffix_arrays.hpp:24,
+                 from /home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/suffix_array_helper.hpp:27,
+                 from /home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/csa_bitcompressed.hpp:25,
+                 from /home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/suffix_arrays.hpp:28,
+                 from /home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/suffix_trees.hpp:25,
+                 from build_index.cpp:10:
+/home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/io.hpp:282: warning: extra ‘;’
+/home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/io.hpp:289: warning: extra ‘;’
+In file included from /home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/construct_sa.hpp:31,
+                 from /home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/algorithms.hpp:669,
+                 from /home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/csa_bitcompressed.hpp:27,
+                 from /home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/suffix_arrays.hpp:28,
+                 from /home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/suffix_trees.hpp:25,
+                 from build_index.cpp:10:
+/home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/qsufsort.hpp:76: warning: extra ‘;’
+In file included from BasicSuffixTree.h:12,
+                 from build_index.cpp:13:
+Document.h: In constructor ‘DocObject::DocObject(int, int, int, long long int)’:
+Document.h:177: warning: ‘DocObject::id’ will be initialized after
+Document.h:175: warning:   ‘int DocObject::docid’
+Document.h:181: warning:   when initialized here
+In file included from build_index.cpp:13:
+BasicSuffixTree.h: In constructor ‘SuffixTreeNode::SuffixTreeNode(int, int, int)’:
+BasicSuffixTree.h:70: warning: comparison between signed and unsigned integer expressions
+BasicSuffixTree.h: In constructor ‘SuffixTreeNode::SuffixTreeNode(int, int, std::vector<FreqNode, std::allocator<FreqNode> >&)’:
+BasicSuffixTree.h:74: warning: comparison between signed and unsigned integer expressions
+build_index.cpp: In function ‘int locate_doc(sdsl::int_vector<0u>&, int)’:
+build_index.cpp:48: warning: comparison between signed and unsigned integer expressions
+build_index.cpp: In function ‘void CST_Traversal(tCST&, int)’:
+build_index.cpp:95: warning: deprecated conversion from string constant to ‘char*’
+build_index.cpp:131: warning: format ‘%d’ expects type ‘int’, but argument 2 has type ‘size_t’
+build_index.cpp:173: warning: format ‘%d’ expects type ‘int’, but argument 2 has type ‘size_t’
+build_index.cpp:225: warning: format ‘%d’ expects type ‘int’, but argument 2 has type ‘size_t’
+build_index.cpp:238: warning: comparison between signed and unsigned integer expressions
+build_index.cpp:136: warning: unused variable ‘c_c’
+In file included from /home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/suffix_trees.hpp:26,
+                 from build_index.cpp:10:
+/home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/suffix_tree_algorithm.hpp: In function ‘typename t_cst::size_type sdsl::locate(const t_cst&, t_pat_iter, t_pat_iter, t_rac&, typename enable_if<is_same::value, sdsl::cst_tag>::type) [with t_cst = sdsl::cst_sada<sdsl::csa_bitcompressed<sdsl::int_alphabet<sdsl::sd_vector<sdsl::int_vector<1u>, sdsl::select_support_mcl<1u, 1u>, sdsl::select_support_mcl<0u, 1u> >, sdsl::rank_support_sd<sdsl::int_vector<1u>, sdsl::select_support_mcl<1u, 1u>, sdsl::select_support_mcl<0u, 1u> >, sdsl::select_support_sd<sdsl::int_vector<1u>, sdsl::select_support_mcl<1u, 1u>, sdsl::select_support_mcl<0u, 1u> >, sdsl::int_vector<0u> > >, sdsl::lcp_support_sada<sdsl::int_vector<1u>, sdsl::select_support_mcl<1u, 1u> >, sdsl::bp_support_sada<256u, 32u, sdsl::rank_support_v5<1u, 1u>, sdsl::select_support_mcl<1u, 1u> >, sdsl::rank_support_v5<10u, 2u>, sdsl::select_support_mcl<10u, 2u> >, t_pat_iter = sdsl::int_vector_iterator<sdsl::int_vector<0u> >, t_rac = sdsl::int_vector<0u>]’:
+build_index.cpp:87:   instantiated from here
+/home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/suffix_tree_algorithm.hpp:160: warning: no return statement in function returning non-void
+g++ -Wall -g -O2 -std=c++0x -pedantic -I/home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include -L/home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/lib -DNDEBUG -msse4.2 -c rtree_build_index.cpp -lsdsl -ldivsufsort -ldivsufsort64
+In file included from /home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/int_vector.hpp:34,
+                 from /home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/algorithms_for_compressed_suffix_arrays.hpp:24,
+                 from /home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/suffix_array_helper.hpp:27,
+                 from /home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/csa_bitcompressed.hpp:25,
+                 from /home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/suffix_arrays.hpp:28,
+                 from /home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/suffix_trees.hpp:25,
+                 from rtree_build_index.cpp:9:
+/home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/io.hpp:282: warning: extra ‘;’
+/home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/io.hpp:289: warning: extra ‘;’
+In file included from /home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/construct_sa.hpp:31,
+                 from /home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/algorithms.hpp:669,
+                 from /home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/csa_bitcompressed.hpp:27,
+                 from /home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/suffix_arrays.hpp:28,
+                 from /home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/suffix_trees.hpp:25,
+                 from rtree_build_index.cpp:9:
+/home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/qsufsort.hpp:76: warning: extra ‘;’
+In file included from RSuffixTree.h:12,
+                 from rtree_build_index.cpp:12:
+../lib/RTree/RTree.h:67: warning: comma at end of enumerator list
+../lib/RTree/RTree.h:601: warning: extra ‘;’
+In file included from BasicSuffixTree.h:12,
+                 from RSuffixTree.h:14,
+                 from rtree_build_index.cpp:12:
+Document.h: In constructor ‘DocObject::DocObject(int, int, int, long long int)’:
+Document.h:177: warning: ‘DocObject::id’ will be initialized after
+Document.h:175: warning:   ‘int DocObject::docid’
+Document.h:181: warning:   when initialized here
+In file included from RSuffixTree.h:14,
+                 from rtree_build_index.cpp:12:
+BasicSuffixTree.h: In constructor ‘SuffixTreeNode::SuffixTreeNode(int, int, int)’:
+BasicSuffixTree.h:70: warning: comparison between signed and unsigned integer expressions
+BasicSuffixTree.h: In constructor ‘SuffixTreeNode::SuffixTreeNode(int, int, std::vector<FreqNode, std::allocator<FreqNode> >&)’:
+BasicSuffixTree.h:74: warning: comparison between signed and unsigned integer expressions
+In file included from rtree_build_index.cpp:12:
+RSuffixTree.h: In constructor ‘RSuffixTreeNode::RSuffixTreeNode(int, int, int)’:
+RSuffixTree.h:51: warning: comparison between signed and unsigned integer expressions
+RSuffixTree.h: In constructor ‘RSuffixTreeNode::RSuffixTreeNode(int, int, std::vector<FreqNode, std::allocator<FreqNode> >&)’:
+RSuffixTree.h:55: warning: comparison between signed and unsigned integer expressions
+rtree_build_index.cpp: In function ‘int locate_doc(sdsl::int_vector<0u>&, int)’:
+rtree_build_index.cpp:59: warning: comparison between signed and unsigned integer expressions
+rtree_build_index.cpp: In function ‘void CST_Traversal(tCST&)’:
+rtree_build_index.cpp:82: warning: deprecated conversion from string constant to ‘char*’
+rtree_build_index.cpp:111: warning: format ‘%d’ expects type ‘int’, but argument 2 has type ‘size_t’
+rtree_build_index.cpp:122: warning: comparison between signed and unsigned integer expressions
+rtree_build_index.cpp:147: warning: format ‘%d’ expects type ‘int’, but argument 2 has type ‘size_t’
+rtree_build_index.cpp:169: warning: comparison between signed and unsigned integer expressions
+rtree_build_index.cpp:197: warning: format ‘%d’ expects type ‘int’, but argument 2 has type ‘size_t’
+rtree_build_index.cpp:209: warning: comparison between signed and unsigned integer expressions
+rtree_build_index.cpp:116: warning: unused variable ‘c_c’
+In file included from /home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/suffix_trees.hpp:26,
+                 from rtree_build_index.cpp:9:
+/home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/suffix_tree_algorithm.hpp: In function ‘typename t_cst::size_type sdsl::locate(const t_cst&, t_pat_iter, t_pat_iter, t_rac&, typename enable_if<is_same::value, sdsl::cst_tag>::type) [with t_cst = sdsl::cst_sada<sdsl::csa_sada<sdsl::enc_vector<sdsl::coder::elias_delta, 8u, 0u>, 32u, 64u, sdsl::sa_order_sa_sampling<0u>, sdsl::int_vector<0u>, sdsl::byte_alphabet>, sdsl::lcp_support_sada<sdsl::int_vector<1u>, sdsl::select_support_mcl<1u, 1u> >, sdsl::bp_support_sada<256u, 32u, sdsl::rank_support_v5<1u, 1u>, sdsl::select_support_mcl<1u, 1u> >, sdsl::rank_support_v5<10u, 2u>, sdsl::select_support_mcl<10u, 2u> >, t_pat_iter = __gnu_cxx::__normal_iterator<char*, std::basic_string<char, std::char_traits<char>, std::allocator<char> > >, t_rac = sdsl::int_vector<0u>]’:
+rtree_build_index.cpp:73:   instantiated from here
+/home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include/sdsl/suffix_tree_algorithm.hpp:160: warning: no return statement in function returning non-void
+g++ -Wall -g -O2 -std=c++0x -pedantic -I/home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include -L/home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/lib -DNDEBUG -msse4.2 -c BasicSuffixTree.cpp -lsdsl -ldivsufsort -ldivsufsort64
+In file included from BasicSuffixTree.h:12,
+                 from BasicSuffixTree.cpp:1:
+Document.h: In constructor ‘DocObject::DocObject(int, int, int, long long int)’:
+Document.h:177: warning: ‘DocObject::id’ will be initialized after
+Document.h:175: warning:   ‘int DocObject::docid’
+Document.h:181: warning:   when initialized here
+In file included from BasicSuffixTree.cpp:1:
+BasicSuffixTree.h: In constructor ‘SuffixTreeNode::SuffixTreeNode(int, int, int)’:
+BasicSuffixTree.h:70: warning: comparison between signed and unsigned integer expressions
+BasicSuffixTree.h: In constructor ‘SuffixTreeNode::SuffixTreeNode(int, int, std::vector<FreqNode, std::allocator<FreqNode> >&)’:
+BasicSuffixTree.h:74: warning: comparison between signed and unsigned integer expressions
+BasicSuffixTree.cpp: In function ‘std::vector<QueryVersion, std::allocator<QueryVersion> > merge_answer(std::vector<QueryVersion, std::allocator<QueryVersion> >&, std::vector<QueryVersion, std::allocator<QueryVersion> >&, int)’:
+BasicSuffixTree.cpp:12: warning: comparison between signed and unsigned integer expressions
+BasicSuffixTree.cpp: In member function ‘virtual void SuffixTreeNode::buildDocs()’:
+BasicSuffixTree.cpp:89: warning: comparison between signed and unsigned integer expressions
+BasicSuffixTree.cpp:103: warning: comparison between signed and unsigned integer expressions
+BasicSuffixTree.cpp: In member function ‘virtual std::vector<QueryVersion, std::allocator<QueryVersion> > SuffixTreeNode::query(long long int, long long int, int)’:
+BasicSuffixTree.cpp:164: warning: comparison between signed and unsigned integer expressions
+g++ -Wall -g -O2 -std=c++0x -pedantic -I/home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/include -L/home/bruce3557/New_Suffix/OurIndex/index/../lib/sdsl-lite/lib -DNDEBUG -msse4.2 -c RSuffixTree.cpp -lsdsl -ldivsufsort -ldivsufsort64
+In file included from RSuffixTree.h:12,
+                 from RSuffixTree.cpp:1:
+../lib/RTree/RTree.h:67: warning: comma at end of enumerator list
+../lib/RTree/RTree.h:601: warning: extra ‘;’
+In file included from BasicSuffixTree.h:12,
+                 from RSuffixTree.h:14,
+                 from RSuffixTree.cpp:1:
+Document.h: In constructor ‘DocObject::DocObject(int, int, int, long long int)’:
+Document.h:177: warning: ‘DocObject::id’ will be initialized after
+Document.h:175: warning:   ‘int DocObject::docid’
+Document.h:181: warning:   when initialized here
+In file included from RSuffixTree.h:14,
+                 from RSuffixTree.cpp:1:
+BasicSuffixTree.h: In constructor ‘SuffixTreeNode::SuffixTreeNode(int, int, int)’:
+BasicSuffixTree.h:70: warning: comparison between signed and unsigned integer expressions
+BasicSuffixTree.h: In constructor ‘SuffixTreeNode::SuffixTreeNode(int, int, std::vector<FreqNode, std::allocator<FreqNode> >&)’:
+BasicSuffixTree.h:74: warning: comparison between signed and unsigned integer expressions
+In file included from RSuffixTree.cpp:1:
+RSuffixTree.h: In constructor ‘RSuffixTreeNode::RSuffixTreeNode(int, int, int)’:
+RSuffixTree.h:51: warning: comparison between signed and unsigned integer expressions
+RSuffixTree.h: In constructor ‘RSuffixTreeNode::RSuffixTreeNode(int, int, std::vector<FreqNode, std::allocator<FreqNode> >&)’:
+RSuffixTree.h:55: warning: comparison between signed and unsigned integer expressions
+RSuffixTree.cpp: In member function ‘virtual int RSuffixTreeNode::getFreq(int) const’:
+RSuffixTree.cpp:21: warning: no return statement in function returning non-void
+RSuffixTree.cpp: In member function ‘virtual int RSuffixTreeNode::load(FILE*)’:
+RSuffixTree.cpp:33: warning: no return statement in function returning non-void
+RSuffixTree.cpp: In member function ‘virtual std::vector<unsigned char, std::allocator<unsigned char> > RSuffixTreeNode::serialize()’:
+RSuffixTree.cpp:37: warning: no return statement in function returning non-void
+RSuffixTree.cpp: At global scope:
+RSuffixTree.cpp:39: error: prototype for ‘void RSuffixTreeNode::query(long long int, long long int, int)’ does not match any in class ‘RSuffixTreeNode’
+RSuffixTree.h:96: error: candidate is: virtual std::vector<Rect, std::allocator<Rect> > RSuffixTreeNode::query(long long int, long long int, int)
+RSuffixTree.cpp: In member function ‘virtual void RSuffixTreeNode::buildDocs()’:
+RSuffixTree.cpp:52: warning: comparison between signed and unsigned integer expressions
+RSuffixTree.cpp:56: error: ‘docObj’ was not declared in this scope
+RSuffixTree.cpp:56: error: no matching function for call to ‘DocObject::DocObject(int&, int&, int)’
+Document.h:181: note: candidates are: DocObject::DocObject(int, int, int, long long int)
+Document.h:180: note:                 DocObject::DocObject()
+Document.h:174: note:                 DocObject::DocObject(const DocObject&)
+RSuffixTree.cpp:59: error: no matching function for call to ‘DocObject::DocObject(int&, int&, int)’
+Document.h:181: note: candidates are: DocObject::DocObject(int, int, int, long long int)
+Document.h:180: note:                 DocObject::DocObject()
+Document.h:174: note:                 DocObject::DocObject(const DocObject&)
+RSuffixTree.cpp:61: error: ‘const struct DocObject’ has no member named ‘st_id’
+RSuffixTree.cpp:61: error: ‘const struct DocObject’ has no member named ‘ed_id’
+RSuffixTree.cpp:48: warning: unused variable ‘docid’
+In file included from RSuffixTree.h:12,
+                 from RSuffixTree.cpp:1:
+../lib/RTree/RTree.h: In member function ‘void RTree<DATATYPE, ELEMTYPE, NUMDIMS, ELEMTYPEREAL, TMAXNODES, TMINNODES>::LoadNodes(RTree<DATATYPE, ELEMTYPE, NUMDIMS, ELEMTYPEREAL, TMAXNODES, TMINNODES>::Node*, RTree<DATATYPE, ELEMTYPE, NUMDIMS, ELEMTYPEREAL, TMAXNODES, TMINNODES>::Node*, RTree<DATATYPE, ELEMTYPE, NUMDIMS, ELEMTYPEREAL, TMAXNODES, TMINNODES>::PartitionVars*) [with DATATYPE = int, ELEMTYPE = int, int NUMDIMS = 2, ELEMTYPEREAL = float, int TMAXNODES = 8, int TMINNODES = 4]’:
+../lib/RTree/RTree.h:1134:   instantiated from ‘void RTree<DATATYPE, ELEMTYPE, NUMDIMS, ELEMTYPEREAL, TMAXNODES, TMINNODES>::SplitNode(RTree<DATATYPE, ELEMTYPE, NUMDIMS, ELEMTYPEREAL, TMAXNODES, TMINNODES>::Node*, const RTree<DATATYPE, ELEMTYPE, NUMDIMS, ELEMTYPEREAL, TMAXNODES, TMINNODES>::Branch*, RTree<DATATYPE, ELEMTYPE, NUMDIMS, ELEMTYPEREAL, TMAXNODES, TMINNODES>::Node**) [with DATATYPE = int, ELEMTYPE = int, int NUMDIMS = 2, ELEMTYPEREAL = float, int TMAXNODES = 8, int TMINNODES = 4]’
+../lib/RTree/RTree.h:1026:   instantiated from ‘bool RTree<DATATYPE, ELEMTYPE, NUMDIMS, ELEMTYPEREAL, TMAXNODES, TMINNODES>::AddBranch(const RTree<DATATYPE, ELEMTYPE, NUMDIMS, ELEMTYPEREAL, TMAXNODES, TMINNODES>::Branch*, RTree<DATATYPE, ELEMTYPE, NUMDIMS, ELEMTYPEREAL, TMAXNODES, TMINNODES>::Node*, RTree<DATATYPE, ELEMTYPE, NUMDIMS, ELEMTYPEREAL, TMAXNODES, TMINNODES>::Node**) [with DATATYPE = int, ELEMTYPE = int, int NUMDIMS = 2, ELEMTYPEREAL = float, int TMAXNODES = 8, int TMINNODES = 4]’
+../lib/RTree/RTree.h:972:   instantiated from ‘bool RTree<DATATYPE, ELEMTYPE, NUMDIMS, ELEMTYPEREAL, TMAXNODES, TMINNODES>::InsertRect(const RTree<DATATYPE, ELEMTYPE, NUMDIMS, ELEMTYPEREAL, TMAXNODES, TMINNODES>::Branch&, RTree<DATATYPE, ELEMTYPE, NUMDIMS, ELEMTYPEREAL, TMAXNODES, TMINNODES>::Node**, int) [with DATATYPE = int, ELEMTYPE = int, int NUMDIMS = 2, ELEMTYPEREAL = float, int TMAXNODES = 8, int TMINNODES = 4]’
+../lib/RTree/RTree.h:504:   instantiated from ‘void RTree<DATATYPE, ELEMTYPE, NUMDIMS, ELEMTYPEREAL, TMAXNODES, TMINNODES>::Insert(const ELEMTYPE*, const ELEMTYPE*, const DATATYPE&) [with DATATYPE = int, ELEMTYPE = int, int NUMDIMS = 2, ELEMTYPEREAL = float, int TMAXNODES = 8, int TMINNODES = 4]’
+RSuffixTree.cpp:62:   instantiated from here
+../lib/RTree/RTree.h:1336: warning: unused variable ‘nodeWasSplit’
+make: *** [suffixnode] Error 1

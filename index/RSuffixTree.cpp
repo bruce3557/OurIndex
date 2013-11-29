@@ -55,7 +55,7 @@ void RSuffixTreeNode::buildDocs() {
     revid = freq_list[i].getRevid();
     set< DocObject >::iterator it = docObj.find(DocObject(docid, revid, 0));
     
-    if(freq_list[i].getFreq() != freq && docid != st_doc) {
+    //if(freq_list[i].getFreq() != freq && docid != st_doc) {
       set< DocObject >::iterator it = docObj.find(DocObject(docid, revid, 0));
       if(freq != -1) {
         Rect rect(it->st_id, it->ed_id, freq, docid, revid);
@@ -65,7 +65,7 @@ void RSuffixTreeNode::buildDocs() {
       st_rev = revid;
       st_time = it->start_time;
       freq = freq_list[i].getFreq();
-    }
+    //}
     
     ed_time = it->start_time;
     ed_rev = revid;
