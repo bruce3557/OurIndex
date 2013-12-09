@@ -49,6 +49,17 @@ bool load_metadata(set< meta_node > &metadata, char *filename) {
   return true;
 }
 
+bool load_docid(vector< DocObject > &docObj, char *filename) {
+  FILE *fp = fopen(filename, "r");
+  int docid, revid;
+  long long st_time;
+  int id = 0;
+  while( fscanf(fp, "%d%d%lld", &docid, &revid, &st_time) != EOF ) {
+    docObj.push(DocObject(id, docid, revid, st_time));
+    ++id;
+  }
+  return true;
+}
 
 void PrintUsage(char *arg) {
   printf("Usage: type the command %s\n Then following it will tell you the step\n", arg);
@@ -78,6 +89,7 @@ int main(int argc, char *argv[]) {
     return 0;
   }
 
+  //memory_manager::use_hugepages();
   printf("AFTER LOADING...\n");
   char s_query[510];
   while(1) {
@@ -94,6 +106,10 @@ int main(int argc, char *argv[]) {
     fprintf(stdout, "enter -1 if you want to use default, default: 10\n");
     scanf("%d", &topk);
     if(topk == -1)  topk = 10;
+
+    int index_type;
+    fprintf(stdout, "Please enter index type(1: basic, 2: rtree):\n");
+    scanf("%d", &index_type);
 
     //
     // TODO (Bruce Kuo):
@@ -124,7 +140,10 @@ int main(int argc, char *argv[]) {
 
     // Find the word that save in the suffix node
     set< meta_node >::iterator mit;
-    vector< QueryVersion > ans;
+    if(index_type == 1)
+      vector< QueryVersion > ans;
+    else
+      vector< int > ans;
     while( 1 ) {
       int node_id = cst.id(v);
       printf("%d\n",node_id);
@@ -139,8 +158,15 @@ int main(int argc, char *argv[]) {
           int ed_pos = mit->pos;
           fseek(p_node_info, st_pos, SEEK_SET);
           node_info.load(p_node_info);
-          vector< QueryVersion > temp = node_info.query(start_time, end_time, topk);
-          ans = merge_answer(ans, temp, topk);
+          
+          if(index_type == 1) {
+            vector< QueryVersion > temp = node_info.query(start_time, end_time, topk);
+            ans = merge_answer(ans, temp, topk);
+          } else if(index_type == 2) {
+            vector< int > temp = node_info.query(start_time, end_time, topk);
+            //ans = merge_answer(ans,temp, topk);
+            ans.insert(ans.end(), temp.begin(), temp.end());
+          }
         } else {
           // TODO (Bruce Kuo):
           //  Dummy node implementation
@@ -152,9 +178,17 @@ int main(int argc, char *argv[]) {
     }
 
     string answer("");
-    for(vector< QueryVersion >::iterator it=ans.begin();it != ans.end();++it)
-      answer += (it->toString()) + string("\n");
-    fprintf(stdout, "%s\n", answer.c_str());
+    if(index_type == 1) {
+      for(vector< QueryVersion >::iterator it=ans.begin();it != ans.end();++it)
+        answer += (it->toString()) + string("\n");
+      fprintf(stdout, "%s\n", answer.c_str());
+    } else if(index_type == 2) {
+      vector< DocObject > docObj;
+      load_docid(docObj, "total_id");
+      for(vector< int >::iterator it=ans.begin();it != ans.end();++it)
+        fprintf(stdout, "%d ", (*it));
+      fprintf(stdout, "\n");
+    }
   }
   fclose(p_node_info);
 

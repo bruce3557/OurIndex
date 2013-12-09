@@ -178,15 +178,23 @@ struct DocObject {
   long long start_time;
 
   DocObject(){}
+  DocObject(int _id): id(_id){}
   DocObject(int _id, int _docid, int _revid, long long st_time): 
     id(_id), docid(_docid), revid(_revid), start_time(st_time) {}
 
+  
+  //bool operator < (const DocObject &t) const {
+  //  return docid < t.docid || (docid == t.docid && revid < t.revid);
+  //}
+  
+  
   bool operator < (const DocObject &t) const {
-    return docid < t.docid || (docid == t.docid && revid < t.revid);
+    return id < t.id;
   }
 };
 
 void buildDocSet(char *filename, set< DocObject > &docObj, int &doc_count);
+DocObject getDocInfo(int id, set< DocObject > &docObj);
 bool ver_cmp(const Version &, const Version &);
 #endif
 
