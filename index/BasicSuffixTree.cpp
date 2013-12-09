@@ -28,6 +28,11 @@ FreqNode::FreqNode(int _docid, int _revid) {
   freq = 0;
 }
 
+FreqNode::FreqNode(int _id, int _docid, int _revid) {
+  id = _id; docid = _docid; revid = _revid;
+  freq = 0;
+}
+
 FreqNode::~FreqNode(){}
 
 bool FreqNode::operator < (const FreqNode &t) const {
@@ -45,6 +50,10 @@ int FreqNode::getDocid() const {
 
 int FreqNode::getRevid() const {
   return revid;
+}
+
+int FreqNode::getId() const {
+  return id;
 }
 
 void FreqNode::setFreq(int value) {

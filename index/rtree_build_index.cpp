@@ -33,25 +33,20 @@ int num_doc;
 int DOCID[200000];
 int REVID[200000];
 
-bool
-vec_cmp(const RSuffixTreeNode &a, const RSuffixTreeNode &b) {
+bool vec_cmp(const RSuffixTreeNode &a, const RSuffixTreeNode &b) {
   return (a.getNodeId() < b.getNodeId());
 }
 
-void
-build_docids(char *path, int num_docs) {
+void build_docids(char *path, int num_docs) {
   fprintf(stderr, "reading %s...\n", path);
   FILE *fp = fopen(path, "r");
   if(fp == NULL)  return;
   int i = 0;
   fprintf(stderr, "start reading!\n");
-  while( fscanf(fp, "%d%d", &DOCID[i], &REVID[i]) != EOF ) {
-    ++i;
-  }
+  while( fscanf(fp, "%d%d", &DOCID[i], &REVID[i]) != EOF ) { ++i; }
 }
 
-int 
-locate_doc(int_vector<> &REVID, int pos) {
+int locate_doc(int_vector<> &REVID, int pos) {
   int st = 0, ed = REVID.size();
   while(st < ed) {
     int mid = (st + ed) >> 1;
@@ -82,7 +77,8 @@ CST_Traversal(tCST &cst) {
   build_docids("/home/bruce3557/Data/Result_2.8G/total_id", num_docs);
 
   //build up doc_obj
-  buildDocSet("/home/bruce3557/Data/Result_2.8G/total_id", docObj);
+  int n_docs;
+  buildDocSet("/home/bruce3557/Data/Result_2.8G/total_id", docObj, n_docs);
 
 
   printf("Starting build HSV + Rtree framework...\n");
@@ -98,7 +94,7 @@ CST_Traversal(tCST &cst) {
         int rid = cst.rb(v);
         vector< FreqNode > freq(num_docs + 1);
         for(int i = 0;i < num_docs; ++i)
-          freq[i] = FreqNode(DOCID[i], REVID[i]);
+          freq[i] = FreqNode(i, DOCID[i], REVID[i]);
 
         for(int i = lid; i <= rid; ++i) {
           int doc_pos = locate_doc(docsign, cst.csa[i]);
@@ -221,13 +217,11 @@ CST_Traversal(tCST &cst) {
   store_to_file(cst, string("cst.idx"));
 }
 
-void 
-PrintUsage(char *str) {
+void PrintUsage(char *str) {
   printf("Usage: %s input output\n", str);
 }
 
-int 
-main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
   if(argc < 3) {
     PrintUsage(argv[0]);
     return 0;

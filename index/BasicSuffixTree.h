@@ -28,6 +28,7 @@ public:
   // Constructor and Destructor
   FreqNode();
   FreqNode(int _docid, int _revid);
+  FreqNode(int _id, int _docid, int _revid);
   ~FreqNode();
 
   // Operator of FreqNode
@@ -41,6 +42,7 @@ public:
 
   int getDocid() const;
   int getRevid() const;
+  int getId() const;
   
   virtual long long getStartTime() { return 0LL; }
 
@@ -50,6 +52,7 @@ public:
 private:
   int docid;
   int revid;
+  int id;
   int freq;
 };
 

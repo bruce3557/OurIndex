@@ -13,6 +13,11 @@
 #include "base_util.h"
 #include "BasicSuffixTree.h"
 
+#include <stdio.h>
+#include <unistd.h>
+
+bool RTreeSearchCallback(int id, void *arg);
+
 struct Rect {
   /*
    * the R-Tree element of a document
@@ -101,7 +106,7 @@ class RSuffixTreeNode {
      *   finish the query function
      */
     //virtual vector< Rect > query(long long st_time, long long ed_time, int top_k);
-    virtual vector< Rect > query(long long st_time, long long ed_time, int threshold);
+    virtual vector< int > query(long long st_time, long long ed_time, int threshold);
 
     virtual int load(FILE *fp);
     /*

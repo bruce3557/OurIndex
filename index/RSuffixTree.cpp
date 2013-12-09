@@ -29,15 +29,58 @@ int RSuffixTreeNode::getDepth() const {
 }
 
 int RSuffixTreeNode::load(FILE *fp) {
+  int size = 0;
+  node_id = bytesToInt(fp);
+  fseek(fp, 4, SEEK_CUR);
+  size += 4;
+  depth = bytesToInt(fp);
+  fseek(fp, 4, SEEK_CUR);
+  size += 4;
+  char fpname[200];
+  char curDir[200];
 
+  if( !getcwd(curDir, sizeof(curDir)) ){
+    fprintf(stderr, "ERROR when getting current director\n");
+    return -1;
+  }
+  sprintf(fpname, "%s\\Rtree\\%d.idx", curDir, node_id);
+  rtree.Load(fpname);
+
+  return size;
 }
 
 vector<unsigned char> RSuffixTreeNode::serialize() {
+  vector<unsigned char> output;
+  // save node id
+  vector<unsigned char> trans = intToBytes(node_id);
+  output.insert(output.end(), trans.begin(), trans.end());
+  // save depth
+  trans = intToBytes(depth);
+  output.insert(output.end(), trans.begin(), trans.end());
+  // save file
+  char fpname[200];
+  char curDir[200];
+  if( !getcwd(curDir, sizeof(curDir)) ) {
+    fprintf(stderr, "ERROR when getting current diretory\n");
+  }
+  sprintf(fpname, "%s\\Rtree\\%d.idx", curDir, node_id);
+  rtree.Save(fpname);
 
+  return output;
 }
 
-void RSuffixTreeNode::query(long long st_time, long long ed_time, int threshold) {
-  
+bool RTreeSearchCallback(int id, void *arg) {
+  vector< int > &answer = *((vector< Rect >*)(arg[0]));
+  answer.push_back(id);
+  return true;
+}
+
+vector< int > RSuffixTreeNode::query(long long st_time, long long ed_time, int threshold) {
+  vector< Rect > answer;
+  Rect searchRect(st_time, ed_time, threshold, -1);
+  int nhits = tree.Search(searchRect.min, searchRect.max, RTreeSearchCallback, (void*)(&answer));
+  fprintf(stderr, "%d hits~~\n", nhits);
+  return answer;
 }
 
 void RSuffixTreeNode::buildDocs() {
