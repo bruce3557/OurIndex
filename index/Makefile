@@ -6,12 +6,11 @@ CC_FLAGS=-std=c++11 -Wall -DNDEBUG  -O2 -ffast-math -funroll-loops -msse4.2 -g -
 #CCLIB=-lsdsl -ldivsufsort -ldivsufsort64 -ldl -ltcl -lefence
 CCLIB=-lsdsl -ldivsufsort -ldivsufsort64
 
-all: build_index rtree_build_index suffixnode document base_util
+all: build_index rtree_build_index
 
 build_index: suffixnode document base_util
 	$(CC) $(CC_FLAGS) -c build_index.cpp $(CCLIB) 
 	$(CC) $(CC_FLAGS) ./base_util.o ./Document.o ./BasicSuffixTree.o ./build_index.o -o ../bin/build_index.x $(CCLIB)
-#	$(CC) $(CC_FLAGS) -c rtree_build_index.cpp $(CCLIB)
 
 rtree_build_index: rsuffix_node document base_util
 	$(CC) $(CC_FLAGS) -c rtree_build_index.cpp $(CCLIB)
@@ -19,7 +18,6 @@ rtree_build_index: rsuffix_node document base_util
 
 suffixnode:
 	$(CC) $(CC_FLAGS) -c BasicSuffixTree.cpp $(CCLIB)
-#	$(CC) $(CC_FLAGS) -c RSuffixTree.cpp $(CCLIB)
 
 rsuffix_node:
 	$(CC) $(CC_FLAGS) -c RSuffixTree.cpp $(CCLIB)

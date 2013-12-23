@@ -95,17 +95,27 @@ void SuffixTreeNode::buildDocs() {
   doc_list.clear();
   vector<int> doc_appear(freq_list.size() + 1);
   std::fill(doc_appear.begin(), doc_appear.end(), -1);
+	puts("START~~~");
+	printf("doc_appear size = %d\n",doc_appear.size());
+	fflush(stdout);
   for(int i=0;i<freq_list.size();++i) {
     if( freq_list[i].getFreq() == 0 ) continue;
+		printf("%d %d\n", i, freq_list[i].getDocid());
+		fflush(stdout);
     int x;
-    if( doc_appear[ freq_list[i].getDocid() ] == -1 ) {
+    if( doc_appear[ i ] == -1 ) {
       doc_appear[i] = x = doc_list.size();
       doc_list.push_back(Document(freq_list[i].getDocid()));
     } else {
       x = doc_appear[freq_list[i].getDocid()];
     }
+		printf("@@: %d\n", freq_list[i].getDocid());
+		fflush(stdout);
     doc_list[x].insertVersion(Version(freq_list[i].getRevid(), freq_list[i].getStartTime(), freq_list[i].getFreq()));
+		puts("QQQ");
+		fflush(stdout);
   }
+	printf("QQQ");
   sortDocs();
   freq_list.clear();
   doc_appear.clear();
@@ -130,27 +140,30 @@ vector<unsigned char> SuffixTreeNode::serialize() {
     trans = doc_list[i].serialize();
     output.insert(output.end(), trans.begin(), trans.end());
   }
-
+  printf("Node size = %d\n", output.size());
   return output;
 }
 
 int SuffixTreeNode::load(FILE *fp) {
   int size = 0;
   node_id = bytesToInt(fp);
-  fseek(fp, 4, SEEK_CUR);
+  //fseek(fp, 4, SEEK_CUR);
   size += 4;
   depth = bytesToInt(fp);
-  fseek(fp, 4, SEEK_CUR);
+  //fseek(fp, 4, SEEK_CUR);
   size += 4;
   int d_size = doc_list.size();
-  fseek(fp, 4, SEEK_CUR);
+  //fseek(fp, 4, SEEK_CUR);
   size += 4;
+  printf("node_id = %d, depth = %d, d_size =  %d\n",node_id,depth,d_size);
   doc_list.resize(d_size);
   for(int i=0;i<d_size;++i) {
+    puts("OAQ");
     int move = doc_list[i].load(fp);
-    fseek(fp, move, SEEK_CUR);
+    //fseek(fp, move, SEEK_CUR);
     size += move;
   }
+  puts("-------------------");
   return size;
 }
 

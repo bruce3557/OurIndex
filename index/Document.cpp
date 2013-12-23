@@ -51,18 +51,19 @@ string Version::toString() {
   output += string(x);
   sprintf(x, "%d\0", freq);
   output += string( x ) + string("\n");
+  return output;
 }
 
 int Version::load(FILE *fp) {
   int size = 0;
   revid = bytesToInt(fp);
-  fseek(fp, 4, SEEK_CUR);
+  //fseek(fp, 4, SEEK_CUR);
   size += 4;
-  start_time = bytesToInt(fp);
-  fseek(fp, 4, SEEK_CUR);
-  size += 4;
+  start_time = bytesToLonglong(fp);
+  //fseek(fp, 4, SEEK_CUR);
+  size += 8;
   freq = bytesToInt(fp);
-  fseek(fp, 4, SEEK_CUR);
+  //fseek(fp, 4, SEEK_CUR);
   size += 4;
   return size;
 }
@@ -174,19 +175,21 @@ string Document::toString() {
 int Document::load(FILE *fp) {
   int size = 0;
   docid = bytesToInt(fp);
-  fseek(fp, 4, SEEK_CUR);
+  //fseek(fp, 4, SEEK_CUR);
   size += 4;
   start_time = bytesToLonglong(fp);
-  fseek(fp, 4, SEEK_CUR);
-  size += 4;
+  //fseek(fp, 4, SEEK_CUR);
+  size += 8;
   int v_size = bytesToInt(fp);
-  fseek(fp, 4, SEEK_CUR);
+  printf("docid = %d, start_time = %lld, v_size = %d\n", docid, start_time, v_size);
+  //fseek(fp, 4, SEEK_CUR);
   size += 4;
   ver_list.resize(v_size);
   for(int i=0;i<v_size;++i) {
     int move = ver_list[i].load(fp);
-    fseek(fp, move, SEEK_CUR);
+    //fseek(fp, move, SEEK_CUR);
     size += move;
+    ver_list[i].Print();
   }
   return size;
 }
@@ -205,8 +208,9 @@ void buildDocSet(char *filename, set< DocObject > &docObj, int &doc_count) {
   fclose(fp);
 }
 
-DocObject &getDocInfo(int id, set< DocObject > &docObj) {
-  set< DocObject > it = docObj.find(DocObject(id));
-  if(it == NULL)  return DocObject(-1);
+DocObject getDocInfo(int id, set< DocObject > &docObj) {
+  set< DocObject >::iterator it = docObj.find(DocObject(id));
+  if(it == docObj.end())  
+    return DocObject(-1);
   return (*it);
 }

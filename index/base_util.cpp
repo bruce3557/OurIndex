@@ -20,7 +20,7 @@ int bytesToInt(vector<unsigned char> &vec) {
 
 int bytesToInt(FILE *fp) {
   int result = 0;
-  unsigned char s[5];
+  unsigned char s[4];
   fread(s, sizeof(char), 4, fp);
   for(int i=0;i<4;++i) {
     int x = s[3-i];
@@ -47,7 +47,7 @@ long long bytesToLonglong(vector<unsigned char> &vec) {
 
 long long bytesToLonglong(FILE *fp) {
   long long result = 0;
-  unsigned char s[10];
+  unsigned char s[8];
   fread(s, sizeof(unsigned char), 8, fp);
   for(int i=0;i<8;++i) {
     long long x = s[7-i];

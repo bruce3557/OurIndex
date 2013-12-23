@@ -65,6 +65,10 @@ public:
       if fail, return -1
    */
   virtual int load(FILE *fp);
+  void Print() {
+    printf("revid = %d, start_time = %lld, freq = %d\n", revid, start_time, freq);
+  }
+
 
 protected:
   int revid;

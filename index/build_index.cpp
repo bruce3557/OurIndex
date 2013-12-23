@@ -34,11 +34,11 @@ FILE *input;
 typedef cst_sada<csa_bitcompressed<int_alphabet<> > > tCST;
 
 int num_doc;
-int DOCID[1000000];
-int REVID[1000000];
+int DOCID[2000000];
+int REVID[2000000];
 
 int 
-locate_doc(int_vector<> &REVID, int pos) {
+locate_doc(int_vector<64> &REVID, int pos) {
   // locate which document contains this string
   int st = 0;
   int ed = REVID.size();
@@ -55,14 +55,12 @@ locate_doc(int_vector<> &REVID, int pos) {
 
 
 // compare function for sorting node list to output
-bool 
-vec_cmp(const SuffixTreeNode &a, const SuffixTreeNode &b) {
+bool vec_cmp(const SuffixTreeNode &a, const SuffixTreeNode &b) {
   return a.getNodeId() < b.getNodeId();
 }
 
 
-void 
-build_docids(char *path, int num_docs) {
+void build_docids(char *path, int num_docs) {
   printf("reading %s...\n", path);
   FILE *fp = fopen(path, "r");
   if(fp == NULL)
@@ -77,7 +75,7 @@ build_docids(char *path, int num_docs) {
 
 void 
 CST_Traversal(tCST &cst, int res_depth=8) {
-  int_vector<> docsign;
+  int_vector<64> docsign;
   //unsigned char dollar_str[] = "1";
   //int dollar_str[] = {1};
   printf("Start building...");
@@ -87,7 +85,7 @@ CST_Traversal(tCST &cst, int res_depth=8) {
   dollar_str[0] = 1;
 
 
-  locate(cst, dollar_str.begin(), dollar_str.end());
+  docsign = locate(cst, dollar_str.begin(), dollar_str.end());
   //locate(cst, dollar_str.begin(), dollar_str.end(), docsign);
   std::sort(docsign.begin(), docsign.end());
 
@@ -97,7 +95,7 @@ CST_Traversal(tCST &cst, int res_depth=8) {
   for(int i = 0;i <= num_docs;++i)
     docprev[i] = -1;
   build_docids("/home/bruce3557/Data/Result_2.8G/total_id", num_docs);
-
+	printf("# of docs: %d\n", num_docs);
   /*
    * TODO (Bruce Kuo):
    * I think we need to implement a better implementation for this part
@@ -169,6 +167,8 @@ CST_Traversal(tCST &cst, int res_depth=8) {
           STN.insert(tx);
         }
       }
+      printf("%d\n", x.getNodeId());
+		  fflush(stdout);
       docprev[i] = x.getNodeId();
     }
   }
@@ -227,9 +227,16 @@ CST_Traversal(tCST &cst, int res_depth=8) {
   }
  
   printf("STN size = %d\n", STN.size());
+	fflush(stdout);
+	int counter = 0;
   vector< SuffixTreeNode > vec;
-  for(set< SuffixTreeNode >::iterator it=STN.begin();it != STN.end(); ++it)
-    vec.push_back(*it);
+  for(set< SuffixTreeNode >::iterator it=STN.begin();it != STN.end(); ++it) {
+    SuffixTreeNode x = (*it);
+		printf("%d\n", ++counter);
+		fflush(stdout);
+		x.buildDocs();
+		vec.push_back(x);
+	}
   std::sort(vec.begin(), vec.end(), vec_cmp);
   STN.clear();
 
@@ -263,7 +270,7 @@ int main(int argc, char *argv[]) {
   }
 
   input = fopen(argv[1], "r");
-  memory_manager::use_hugepages(10ULL * 1024ULL * 1024ULL); 
+  //memory_manager::use_hugepages(); 
   tCST cst;
   construct(cst, argv[1], 'd');
   

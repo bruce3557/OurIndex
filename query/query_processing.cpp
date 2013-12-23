@@ -55,7 +55,7 @@ bool load_docid(vector< DocObject > &docObj, char *filename) {
   long long st_time;
   int id = 0;
   while( fscanf(fp, "%d%d%lld", &docid, &revid, &st_time) != EOF ) {
-    docObj.push(DocObject(id, docid, revid, st_time));
+    docObj.push_back(DocObject(id, docid, revid, st_time));
     ++id;
   }
   return true;
@@ -63,6 +63,14 @@ bool load_docid(vector< DocObject > &docObj, char *filename) {
 
 void PrintUsage(char *arg) {
   printf("Usage: type the command %s\n Then following it will tell you the step\n", arg);
+}
+
+void TEST_LOAD_NODE(FILE *fp) {
+  while( !feof(fp) ) {
+    SuffixTreeNode node_info;
+    node_info.load(fp);
+    //node_info.print();
+  }
 }
 
 int main(int argc, char *argv[]) {
@@ -88,6 +96,8 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "Loading node information error...");
     return 0;
   }
+
+  TEST_LOAD_NODE(p_node_info);
 
   //memory_manager::use_hugepages();
   printf("AFTER LOADING...\n");
@@ -126,27 +136,34 @@ int main(int argc, char *argv[]) {
     tCST::node_type v = cst.root();
     //string query = string(s_query);
     //string::iterator qit = query.begin();
-    int_vector<> query(2);
-    query[0] = 1 , query[1] = 2;//query[2] = 31; 
-    int_vector<>::iterator qit = query.begin();
+    int_vector<> query(7);
+    query[0] = 2; query[1] = 3;
+    query[2] = 4; query[3] = 5;
+    query[4] = 6; query[5] = 7;
+    query[6] = 8;
+    auto qit = query.begin();
     for(uint64_t pos=0;qit != query.end();++qit) {
       if(forward_search(cst, v, qit-query.begin(), *qit, pos) > 0) {
-        
+        //puts("VVV");
+        cout << qit-query.begin() << "-[" << cst.lb(v) << "," << cst.rb(v) << "]" << endl;
+        cout << "matched " << *qit << endl;
       } else {
         break;
       }
+    }
+    if(qit != query.end()) {
+      puts("OAQ");
     }
     printf("After finding pattern...\n");
 
     // Find the word that save in the suffix node
     set< meta_node >::iterator mit;
-    if(index_type == 1)
-      vector< QueryVersion > ans;
-    else
-      vector< int > ans;
+    vector< QueryVersion > ans;
+    vector< int > ans2;
     while( 1 ) {
       int node_id = cst.id(v);
-      printf("%d\n",node_id);
+      printf("id = %d\n",node_id);
+      printf("dep = %d\n", cst.depth(v));
       mit = metadata.find( meta_node(node_id, -1) );
       if( mit != metadata.end() ) {
 
@@ -158,15 +175,16 @@ int main(int argc, char *argv[]) {
           int ed_pos = mit->pos;
           fseek(p_node_info, st_pos, SEEK_SET);
           node_info.load(p_node_info);
+          node_info.print();
           
           if(index_type == 1) {
             vector< QueryVersion > temp = node_info.query(start_time, end_time, topk);
             ans = merge_answer(ans, temp, topk);
-          } else if(index_type == 2) {
+          } /*else if(index_type == 2) {
             vector< int > temp = node_info.query(start_time, end_time, topk);
             //ans = merge_answer(ans,temp, topk);
-            ans.insert(ans.end(), temp.begin(), temp.end());
-          }
+            ans2.insert(ans2.end(), temp.begin(), temp.end());
+          }*/
         } else {
           // TODO (Bruce Kuo):
           //  Dummy node implementation
@@ -185,7 +203,7 @@ int main(int argc, char *argv[]) {
     } else if(index_type == 2) {
       vector< DocObject > docObj;
       load_docid(docObj, "total_id");
-      for(vector< int >::iterator it=ans.begin();it != ans.end();++it)
+      for(vector< int >::iterator it=ans2.begin();it != ans2.end();++it)
         fprintf(stdout, "%d ", (*it));
       fprintf(stdout, "\n");
     }

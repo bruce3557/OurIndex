@@ -134,6 +134,15 @@ public:
     return (depth < t.getDepth() || (depth == t.getDepth() && node_id > t.getNodeId()));
   }
 
+  void print() {
+    printf("Node ID: %d\n", node_id);
+    printf("Depth: %d\n", depth);
+    printf("# of docs: %d\n", doc_list.size());
+    for(int i=0;i<doc_list.size();++i)
+      doc_list[i].Print();
+    printf("------------------------------------\n");
+  }
+
 private:
   int node_id;
   int depth;
